@@ -7,6 +7,7 @@ import ReferralSection from "./pages/UserSpace/ReferralSection/ReferralSection.j
 import HelpSection from "./pages/UserSpace/HelpSection/HelpSection.jsx";
 import ProfileSection from "./pages/UserSpace/ProfileSection/ProfileSection.jsx";
 import CoursesPage from "./pages/Courses/CoursesPage.jsx";
+import CourseDetailPage from "@/pages/CourseDetailPage/CourseDetailPage.jsx";
 
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/" element={<HomePage/>} />
                 {/*<Route path="/signup" element={<SignupPage />} />*/}
                 <Route path="/courses" element={<CoursesPage />} />
+                <Route path="/courses-detail" element={<CourseDetailPage/>} />
 
             </Routes>
             {showFooter && <Footer />}

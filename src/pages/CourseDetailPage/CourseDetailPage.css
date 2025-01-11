@@ -1,0 +1,85 @@
+.prose {
+    max-width: 65ch;
+    line-height: 1.75;
+}
+
+.prose p {
+    margin-bottom: 1.25em;
+}
+
+/* Smooth scrolling for the whole page */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom video player styling */
+video {
+    border-radius: 1rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Enhanced shadow effects */
+.shadow-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Gradient overlay for video container */
+.video-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to right bottom, rgba(30, 64, 175, 0.05), rgba(59, 130, 246, 0.1));
+    pointer-events: none;
+}
+
+/* Smooth transitions */
+.transition-all {
+    transition-property: all;
+    transition-duration: 300ms;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced hover effects */
+a:hover, button:hover {
+    transform: translateY(-2px);
+}
+
+/* Sticky sidebar enhancement */
+.sticky {
+    position: sticky;
+    top: 24px;
+}
+
+/* Media queries for responsive design */
+@media (max-width: 1024px) {
+    .sticky {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .prose {
+        font-size: 0.95rem;
+    }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #2563eb;
+    border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #1d4ed8;
+}
