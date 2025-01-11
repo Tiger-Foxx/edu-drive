@@ -105,7 +105,7 @@ const HeroSection = () => {
                         <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl group">
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                             <img
-                                src="/api/placeholder/800/600"
+                                src="HeroDrive.png"
                                 alt="Education"
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
@@ -118,8 +118,8 @@ const HeroSection = () => {
                                         <div className="flex items-center gap-3">
                                             <Award className="text-blue-600 animate-pulse" size={24} />
                                             <div>
-                                                <h4 className="font-semibold text-sm">Certification</h4>
-                                                <p className="text-xs text-gray-500">Formations certifiantes</p>
+                                                <h4 className="font-semibold text-sm">Illimité</h4>
+                                                <p className="text-xs text-gray-500">Un nombre alucinant</p>
                                             </div>
                                         </div>
                                     </div>

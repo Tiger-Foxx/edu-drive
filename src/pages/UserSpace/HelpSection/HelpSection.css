@@ -1,0 +1,80 @@
+/* src/styles/HelpSection.css */
+.help-container {
+    position: relative;
+}
+
+.help-nav {
+    transition: transform 0.3s ease-out;
+}
+
+@media (max-width: 768px) {
+    .help-nav.hidden {
+        transform: translateX(-100%);
+    }
+}
+
+.nav-item {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.nav-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    width: 3px;
+    height: 0;
+    background: #2563eb;
+    transition: height 0.2s ease;
+}
+
+.nav-item.active::before {
+    height: 100%;
+}
+
+.help-content {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.article-card {
+    transition: all 0.3s ease;
+}
+
+.article-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.search-bar:focus-within {
+    transform: translateY(-2px);
+}
+
+.help-section-title {
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.help-section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+    border-radius: 2px;
+}

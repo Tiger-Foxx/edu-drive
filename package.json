@@ -17,8 +17,9 @@
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.1.1",
     "react-slick": "^0.30.3",
+    "shadcn-ui": "^0.9.4",
     "slick-carousel": "^1.8.1",
-    "swiper": "^11.2.1"
+    "swiper": "^10.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

@@ -1,0 +1,79 @@
+/* src/styles/ReferralSection.css */
+.balance-card {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    transition: transform 0.3s ease;
+}
+
+.balance-card:hover {
+    transform: translateY(-4px);
+}
+
+.stats-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.referral-code-input {
+    background: rgba(37, 99, 235, 0.1);
+    transition: all 0.3s ease;
+}
+
+.referral-code-input:hover {
+    background: rgba(37, 99, 235, 0.15);
+}
+
+.withdrawal-form {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
+}
+
+.withdrawal-form.open {
+    max-height: 500px;
+}
+
+.referral-list {
+    max-height: 400px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.referral-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.referral-list::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.referral-list::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}
+
+.stat-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #2563eb, #60a5fa);
+}
+
+.copy-animation {
+    animation: copyFade 1s ease-in-out;
+}
+
+@keyframes copyFade {
+    0% { opacity: 0; transform: translateY(10px); }
+    50% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-10px); }
+}

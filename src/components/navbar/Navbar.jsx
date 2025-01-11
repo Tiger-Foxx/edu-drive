@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, Users, BookOpen, Gift } from 'lucide-react';
+import { ChevronDown, Menu, X, Users, BookOpen, Gift,User2 } from 'lucide-react';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,12 +28,12 @@ const Navbar = () => {
             ]
         },
         {
-            label: 'Parrainage',
-            icon: <Gift className="w-4 h-4" />,
+            label: 'Mon espace',
+            icon: <User2 className="w-4 h-4" />,
             submenu: [
-                { label: 'Comment ça marche', path: '/referral' },
-                { label: 'Mes filleuls', path: '/my-referrals' },
-                { label: 'Mes gains', path: '/earnings' }
+                { label: 'Aide', path: '/dashboard/help' },
+                { label: 'Parrainage', path: '/dashboard/referral' },
+                { label: 'Mon Profile', path: '/dashboard/profile' }
             ]
         },
         {
@@ -69,7 +69,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-between h-full">
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
-                            <img src="/api/placeholder/40/40" alt="Logo" className="h-8 w-8" />
+                            <img src="Google_Drive_logo.png" alt="Logo" className="h-8 w-8" />
                             <span className="font-bold text-xl text-gray-900">Edu-Drive</span>
                         </Link>
 

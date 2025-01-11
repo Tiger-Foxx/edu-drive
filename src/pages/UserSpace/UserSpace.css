@@ -1,0 +1,158 @@
+/* src/styles/UserSpace.css */
+.dashboard-container {
+    padding-top: 4rem; /* Space for navbar */
+    min-height: calc(100vh - 4rem); /* Adjust for navbar height */
+    background-color: #f8fafc;
+}
+
+.dashboard-sidebar {
+    position: fixed;
+    top: 4rem; /* Below navbar */
+    left: 0;
+    height: calc(100vh - 4rem);
+    width: 280px;
+    background: white;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease-in-out;
+    z-index: 40;
+}
+
+.dashboard-sidebar.closed {
+    transform: translateX(-100%);
+}
+
+.sidebar-header {
+    padding: 2rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.sidebar-menu {
+    padding: 1.5rem;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    color: #475569;
+    transition: all 0.2s;
+}
+
+.menu-item:hover {
+    background-color: #f1f5ff;
+    color: #2563eb;
+}
+
+.menu-item.active {
+    background-color: #2563eb;
+    color: white;
+}
+
+.menu-item-icon {
+    margin-right: 1rem;
+}
+
+.dashboard-main {
+    margin-left: 0;
+    padding: 2rem 1rem;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.hamburger-btn {
+    position: fixed;
+    top: 5.3rem;
+    left: 0.4rem;
+    z-index: 50;
+    background: #2563eb;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-actions {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    background: white;
+}
+
+.action-button {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s;
+}
+
+.action-button.primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.action-button.primary:hover {
+    background-color: #1d4ed8;
+}
+
+.action-button.secondary {
+    background-color: #f8fafc;
+    color: #475569;
+}
+
+.action-button.secondary:hover {
+    background-color: #f1f5ff;
+}
+
+.action-button.danger {
+    color: #ef4444;
+    background-color: #fef2f2;
+}
+
+.action-button.danger:hover {
+    background-color: #fee2e2;
+}
+
+/* Responsive Design */
+@media (min-width: 1024px) {
+    .dashboard-main {
+        margin-left: 280px;
+    }
+
+    .hamburger-btn {
+        display: none;
+    }
+
+    .dashboard-sidebar {
+        transform: none !important;
+    }
+}
+
+/* Custom Scrollbar */
+.dashboard-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f8fafc;
+}
+
+.dashboard-sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-track {
+    background: #f8fafc;
+}
+
+.dashboard-sidebar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 3px;
+}

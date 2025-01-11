@@ -19,7 +19,7 @@ const Footer = () => {
                     {/* Colonne À propos */}
                     <div className="space-y-6">
                         <div>
-                            <img src="/api/placeholder/150/50" alt="Logo" className="h-8" />
+                            <img src="Google_Drive_logo.png" alt="Logo" className="h-8" />
                         </div>
                         <p className="text-gray-600 leading-relaxed">
                             Nous formons la prochaine génération de talents numériques avec une approche innovante et personnalisée.

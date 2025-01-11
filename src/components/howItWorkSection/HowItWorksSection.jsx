@@ -61,7 +61,7 @@ const HowItWorksSection = () => {
                 <div className="image-container animate-on-scroll slide-right">
                     <div className="image-wrapper">
                         <img
-                            src="/api/placeholder/600/400"
+                            src="preview.png"
                             alt="Platform preview"
                             className="main-image"
                         />
@@ -119,7 +119,7 @@ const HowItWorksSection = () => {
 
                     <div className="illustration-container animate-on-scroll slide-left">
                         <img
-                            src="/api/placeholder/500/600"
+                            src="premium.jpg"
                             alt="Learning process"
                             className="illustration-image"
                         />
