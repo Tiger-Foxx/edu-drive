@@ -1,230 +1,120 @@
-/* src/components/Navbar/Navbar.css */
+/* src/components/navbar/Navbar.css */
 .navbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
+    @apply fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md;
     height: 80px;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
     transition: all 0.3s ease;
 }
 
 .navbar.scrolled {
-    height: 70px;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+    @apply shadow-lg bg-white/90;
+    height: 64px;
 }
 
-.nav-container {
-    max-width: 1400px;
-    height: 100%;
-    margin: 0 auto;
-    padding: 0 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.nav-logo img {
-    height: 40px;
-    transition: all 0.3s ease;
+.nav-logo {
+    @apply flex items-center gap-2;
 }
 
 .nav-menu {
-    display: flex;
-    gap: 2rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
+    @apply flex items-center gap-8;
 }
 
 .nav-item {
-    position: relative;
+    @apply relative;
 }
 
 .nav-link {
-    color: #1a1a1a;
-    text-decoration: none;
-    font-size: 1rem;
-    font-weight: 500;
-    padding: 0.5rem 0;
-    transition: color 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.nav-link:hover {
-    color: #2563eb;
-}
-
-.submenu-arrow {
-    border: solid #1a1a1a;
-    border-width: 0 2px 2px 0;
-    display: inline-block;
-    padding: 3px;
-    transform: rotate(45deg);
-    transition: all 0.3s ease;
-}
-
-.has-submenu:hover .submenu-arrow {
-    transform: rotate(-135deg);
-    border-color: #2563eb;
+    @apply flex items-center gap-2 px-1 py-2 text-gray-700 hover:text-blue-600 transition-colors;
 }
 
 .submenu {
-    position: absolute;
-    top: 100%;
-    left: -1rem;
-    background: white;
-    min-width: 220px;
-    padding: 1rem 0;
-    border-radius: 12px;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(20px);
-    transition: all 0.3s ease;
+    @apply absolute top-full left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-xl
+    border border-gray-100 min-w-[220px] py-2 mt-2 invisible opacity-0
+    translate-y-2 transition-all duration-200;
 }
 
 .submenu.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-}
-
-.submenu-item {
-    padding: 0.5rem 1.5rem;
+    @apply visible opacity-100 translate-y-0;
 }
 
 .submenu-link {
-    color: #1a1a1a;
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: color 0.3s ease;
-    display: block;
-}
-
-.submenu-link:hover {
-    color: #2563eb;
+    @apply block px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50
+    hover:text-blue-600 transition-colors;
 }
 
 .nav-buttons {
-    display: flex;
-    gap: 1rem;
-    margin-left: 2rem;
+    @apply flex items-center gap-3 ml-8;
 }
 
 .nav-button {
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    text-decoration: none;
+    @apply px-4 py-2 text-sm font-medium rounded-lg transition-colors;
 }
 
 .nav-button.login {
-    color: #2563eb;
-    background: rgba(37, 99, 235, 0.1);
-}
-
-.nav-button.login:hover {
-    background: rgba(37, 99, 235, 0.2);
+    @apply text-gray-700 hover:text-blue-600;
 }
 
 .nav-button.signup {
-    color: white;
-    background: #2563eb;
+    @apply text-white bg-blue-600 hover:bg-blue-700;
 }
 
-.nav-button.signup:hover {
-    background: #1d4ed8;
+/* Mobile Menu Styles */
+.mobile-menu-overlay {
+    @apply fixed inset-0 z-40 bg-black/20 backdrop-blur-sm invisible opacity-0
+    transition-all duration-300;
+}
+
+.mobile-menu-overlay.active {
+    @apply visible opacity-100;
+}
+
+.mobile-menu {
+    @apply fixed top-0 right-0 w-80 h-full bg-white shadow-2xl py-20 px-6
+    transform translate-x-full transition-transform duration-300;
+}
+
+.mobile-menu-overlay.active .mobile-menu {
+    @apply translate-x-0;
+}
+
+.mobile-menu-item {
+    @apply py-2;
 }
 
 .mobile-menu-button {
-    display: none;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 30px;
-    height: 20px;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    z-index: 10;
+    @apply flex items-center justify-between w-full py-2 text-gray-700
+    hover:text-blue-600 transition-colors;
 }
 
-.mobile-menu-button span {
-    width: 100%;
-    height: 2px;
-    background: #1a1a1a;
-    transition: all 0.3s ease;
+.mobile-submenu {
+    @apply pl-4 space-y-1 overflow-hidden max-h-0 opacity-0 transition-all duration-200;
 }
 
-/* Responsive Design */
-@media (max-width: 1024px) {
-    .nav-right {
-        position: fixed;
-        top: 0;
-        right: -100%;
-        width: 300px;
-        height: 100vh;
-        background: white;
-        padding: 6rem 2rem;
-        transition: all 0.3s ease;
-        overflow-y: auto;
-    }
-
-    .nav-right.active {
-        right: 0;
-        box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
-    }
-
-    .nav-menu {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
-    .submenu {
-        position: static;
-        box-shadow: none;
-        padding-left: 1rem;
-        display: none;
-    }
-
-    .submenu.active {
-        display: block;
-    }
-
-    .nav-buttons {
-        flex-direction: column;
-        margin: 2rem 0 0 0;
-    }
-
-    .mobile-menu-button {
-        display: flex;
-    }
-
-    .mobile-menu-button.active span:nth-child(1) {
-        transform: translateY(9px) rotate(45deg);
-    }
-
-    .mobile-menu-button.active span:nth-child(2) {
-        opacity: 0;
-    }
-
-    .mobile-menu-button.active span:nth-child(3) {
-        transform: translateY(-9px) rotate(-45deg);
-    }
+.mobile-submenu.active {
+    @apply max-h-screen opacity-100 mt-2;
 }
 
-@media (max-width: 640px) {
-    .nav-container {
-        padding: 0 1rem;
-    }
+.mobile-submenu-link {
+    @apply block py-2 text-sm text-gray-600 hover:text-blue-600 transition-colors;
+}
 
-    .nav-logo img {
-        height: 35px;
+.mobile-buttons {
+    @apply mt-6 space-y-3;
+}
+
+.mobile-button {
+    @apply block w-full px-4 py-2 text-center text-sm font-medium rounded-lg transition-colors;
+}
+
+.mobile-button.login {
+    @apply text-gray-700 border border-gray-200 hover:bg-gray-50;
+}
+
+.mobile-button.signup {
+    @apply text-white bg-blue-600 hover:bg-blue-700;
+}
+
+@screen lg {
+    .mobile-menu-overlay {
+        @apply hidden;
     }
 }

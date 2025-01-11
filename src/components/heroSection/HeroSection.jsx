@@ -1,87 +1,152 @@
-// src/components/HeroSection/HeroSection.jsx
 import { Link } from 'react-router-dom';
-import './HeroSection.css';
+import { ArrowRight, Users, Award, BookOpen, Target } from 'lucide-react';
+import './HeroSection.css'
 
 const HeroSection = () => {
     return (
-        <section className="hero-section">
-            <div className="hero-container">
-                <div className="hero-content">
-                    <div className="hero-badge">
-            <span className="badge-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="badge-svg">
-                <path d="M11.7 2.805a.75.75 0 01.6 0A60.65 60.65 0 0122.83 8.72a.75.75 0 01-.231 1.337 49.949 49.949 0 00-9.902 3.912l-.003.002-.34.18a.75.75 0 01-.707 0A50.009 50.009 0 007.5 12.174v-.224c0-.131.067-.248.172-.311a54.614 54.614 0 014.653-2.52.75.75 0 00-.65-1.352 56.129 56.129 0 00-4.78 2.589 1.858 1.858 0 00-.859 1.228 49.803 49.803 0 00-4.634-1.527.75.75 0 01-.231-1.337A60.653 60.653 0 0111.7 2.805z" />
-                <path d="M13.06 15.473a48.45 48.45 0 017.666-3.282c.134 1.414.22 2.843.255 4.285a.75.75 0 01-.46.71 47.878 47.878 0 00-8.105 4.342.75.75 0 01-.832 0 47.877 47.877 0 00-8.104-4.342.75.75 0 01-.461-.71c.035-1.442.121-2.87.255-4.286A48.4 48.4 0 016 13.18v1.27a1.5 1.5 0 00-.14 2.508c-.09.38-.222.753-.397 1.11.452.213.901.434 1.346.661a6.729 6.729 0 00.551-1.608 1.5 1.5 0 00.14-2.67v-.645a48.549 48.549 0 013.44 1.668 2.25 2.25 0 002.12 0z" />
-                <path d="M4.462 19.462c.42-.419.753-.89 1-1.394.453.213.902.434 1.347.661a6.743 6.743 0 01-1.286 1.794.75.75 0 11-1.06-1.06z" />
-              </svg>
-            </span>
-                        Développez vos compétences avec nous
-                    </div>
+        <section className="relative min-h-screen bg-gradient-to-br from-white via-blue-50 to-white overflow-hidden">
+            {/* Animated background elements */}
+            <div className="absolute inset-0 overflow-hidden">
+                <div className="absolute -top-[40%] -left-[20%] w-[70%] h-[70%] rounded-full bg-blue-100/30 blur-3xl animate-pulse-slow" />
+                <div className="absolute -bottom-[40%] -right-[20%] w-[70%] h-[70%] rounded-full bg-blue-100/30 blur-3xl animate-pulse-slower" />
 
-                    <h1 className="hero-title">
-                        <span className="gradient-text">Maîtrisez</span> les compétences
-                        <br />qui façonnent l&#39;avenir
-                    </h1>
-
-                    <p className="hero-description">
-                        Accédez à des formations professionnelles de haute qualité et rejoignez
-                        une communauté d&#39;apprenants passionnés. Investissez dans votre avenir
-                        dès aujourd&#39;hui.
-                    </p>
-
-                    <div className="hero-cta">
-                        <Link to="/signup" className="primary-button">
-                            Commencer maintenant
-                            <span className="button-icon">→</span>
-                        </Link>
-                        <Link to="/courses" className="secondary-button">
-                            Découvrir les formations
-                        </Link>
-                    </div>
-
-                    <div className="hero-stats">
-                        <div className="stat-item">
-                            <span className="stat-number">15k+</span>
-                            <span className="stat-label">Étudiants formés</span>
-                        </div>
-                        <div className="stat-separator" />
-                        <div className="stat-item">
-                            <span className="stat-number">95%</span>
-                            <span className="stat-label">Taux de satisfaction</span>
-                        </div>
-                        <div className="stat-separator" />
-                        <div className="stat-item">
-                            <span className="stat-number">50+</span>
-                            <span className="stat-label">Formations disponibles</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="hero-image">
-                    <div className="image-wrapper">
-                        <img src="/api/placeholder/600/700" alt="Education" className="main-image" />
-                        <div className="floating-card card-1">
-                            <div className="card-icon">🎯</div>
-                            <div className="card-content">
-                                <h4>Objectifs personnalisés</h4>
-                                <p>Suivez votre progression</p>
-                            </div>
-                        </div>
-                        <div className="floating-card card-2">
-                            <div className="card-icon">🏆</div>
-                            <div className="card-content">
-                                <h4>Certifications</h4>
-                                <p>Reconnues par l&#39;industrie</p>
-                            </div>
-                        </div>
-                    </div>
+                {/* Geometric patterns */}
+                <div className="absolute inset-0">
+                    <div className="absolute top-[10%] left-[5%] w-4 h-4 border-2 border-blue-200 rounded-full animate-geometric-1" />
+                    <div className="absolute top-[20%] right-[10%] w-6 h-6 border-2 border-blue-300 rotate-45 animate-geometric-2" />
+                    <div className="absolute bottom-[15%] left-[15%] w-8 h-8 border-2 border-blue-400 rounded-lg animate-geometric-3" />
                 </div>
             </div>
 
-            <div className="hero-shape-divider">
-                <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
-                    <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+            {/* Main content */}
+            <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
+                <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    {/* Left column - Content */}
+                    <div className="space-y-8">
+                        {/* Badge with glow effect */}
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 text-blue-600 font-medium text-sm shadow-glow relative overflow-hidden group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-100/0 via-blue-200/30 to-blue-100/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                            <Users size={18} className="animate-bounce-subtle" />
+                            <span>Rejoignez notre communauté d&#39;apprenants</span>
+                        </div>
+
+                        {/* Main heading with animated gradient */}
+                        <h1 className="text-5xl lg:text-5xl font-bold leading-tight">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 animate-gradient">
+                Transformez
+              </span>
+                            <br />
+                            <span className="relative">
+                votre avenir
+                <svg className="absolute -bottom-2 left-0 w-full" height="4" viewBox="0 0 300 4" fill="none">
+                  <path d="M0 2L300 2" stroke="url(#paint0_linear)" strokeWidth="3" strokeDasharray="6 6"/>
+                  <defs>
+                    <linearGradient id="paint0_linear" x1="0" y1="2" x2="300" y2="2">
+                      <stop stopColor="#2563eb" />
+                      <stop offset="1" stopColor="#60a5fa" />
+                    </linearGradient>
+                  </defs>
                 </svg>
+              </span>
+                            <br />
+                            avec nos formations
+                        </h1>
+
+                        {/* Description with fade-in effect */}
+                        <p className="text-lg text-gray-600 max-w-xl animate-fade-in">
+                            Accédez à des formations de qualité et bénéficiez de notre système de parrainage exclusif avec jusqu&#39;à 40% de commission.
+                        </p>
+
+                        {/* CTA buttons with enhanced hover effects */}
+                        <div className="flex flex-col sm:flex-row gap-4">
+                            <Link
+                                to="/signup"
+                                className="group relative inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <span className="relative flex items-center">
+                  Commencer maintenant
+                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                </span>
+                            </Link>
+                            <Link
+                                to="/referral"
+                                className="group inline-flex items-center justify-center px-6 py-3 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:scale-105"
+                            >
+                                Programme de parrainage
+                                <BookOpen className="ml-2 opacity-0 group-hover:opacity-100 transition-all" size={20} />
+                            </Link>
+                        </div>
+
+                        {/* Enhanced Statistics with hover effects */}
+                        <div className="grid grid-cols-3 gap-4 pt-8">
+                            {[
+                                { icon: BookOpen, value: "40%", label: "Commission parrainage" },
+                                { icon: Target, value: "50+", label: "Formations" },
+                                { icon: BookOpen, value: "24/7", label: "Accès illimité" }
+                            ].map((stat, index) => (
+                                <div key={index} className="group relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl blur-lg transform group-hover:scale-110 transition-transform" />
+                                    <div className="relative text-center p-4 bg-white/80 backdrop-blur-sm rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-blue-100">
+                                        <stat.icon className="w-6 h-6 mx-auto mb-2 text-blue-600" />
+                                        <div className="text-2xl font-bold text-blue-600 group-hover:scale-110 transition-transform">
+                                            {stat.value}
+                                        </div>
+                                        <div className="text-sm text-gray-600">{stat.label}</div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Right column - Enhanced Image Section */}
+                    <div className="relative">
+                        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-2xl blur-2xl transform scale-95" />
+                        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl group">
+                            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <img
+                                src="/api/placeholder/800/600"
+                                alt="Education"
+                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            />
+
+                            {/* Enhanced Floating cards */}
+                            <div className="absolute -left-6 top-1/4 animate-float">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl blur-lg" />
+                                    <div className="relative p-4 bg-white rounded-xl shadow-lg max-w-[200px] backdrop-blur-sm border border-white/50">
+                                        <div className="flex items-center gap-3">
+                                            <Award className="text-blue-600 animate-pulse" size={24} />
+                                            <div>
+                                                <h4 className="font-semibold text-sm">Certification</h4>
+                                                <p className="text-xs text-gray-500">Formations certifiantes</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="absolute -right-6 bottom-1/4 animate-float-delayed">
+                                <div className="relative">
+                                    <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-blue-600/10 rounded-xl blur-lg" />
+                                    <div className="relative p-4 bg-white rounded-xl shadow-lg max-w-[200px] backdrop-blur-sm border border-white/50">
+                                        <div className="flex items-center gap-3">
+                                            <BookOpen className="text-blue-600 animate-pulse" size={24} />
+                                            <div>
+                                                <h4 className="font-semibold text-sm">Drive</h4>
+                                                <p className="text-xs text-gray-500">Accès immédiat</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Corner decorations */}
+                        <div className="absolute -bottom-4 -right-4 w-24 h-24 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full opacity-20 blur-2xl" />
+                        <div className="absolute -top-4 -left-4 w-32 h-32 bg-gradient-to-br from-blue-300 to-blue-500 rounded-full opacity-20 blur-2xl" />
+                    </div>
+                </div>
             </div>
         </section>
     );
