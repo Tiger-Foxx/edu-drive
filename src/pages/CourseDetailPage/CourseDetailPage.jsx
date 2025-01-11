@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Lock, PlayCircle, FileText, ChevronRight, ExternalLink, BookOpen, Clock, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './CourseDetailPage.css';
@@ -34,7 +34,7 @@ const CourseDetailPage = () => {
                                                 className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-full
                                                 transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
                                             >
-                                                S'inscrire pour accéder
+                                                S&#39;inscrire pour accéder
                                             </Link>
                                         </div>
                                     )}
@@ -82,7 +82,7 @@ const CourseDetailPage = () => {
                                         text-white font-semibold px-6 py-4 rounded-xl transition-all duration-300
                                         hover:shadow-lg mb-6"
                                     >
-                                        S'inscrire maintenant
+                                        S&#39;inscrire maintenant
                                     </Link>
                                 )}
 
@@ -212,7 +212,7 @@ const CourseDetailPage = () => {
                                         font-semibold px-6 py-3 rounded-xl transition-all duration-300
                                         hover:shadow-lg hover:bg-blue-50"
                                     >
-                                        S'inscrire
+                                        S&#39;inscrire
                                     </Link>
                                 </div>
                             )}

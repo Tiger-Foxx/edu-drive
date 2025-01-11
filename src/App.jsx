@@ -8,6 +8,7 @@ import HelpSection from "./pages/UserSpace/HelpSection/HelpSection.jsx";
 import ProfileSection from "./pages/UserSpace/ProfileSection/ProfileSection.jsx";
 import CoursesPage from "./pages/Courses/CoursesPage.jsx";
 import CourseDetailPage from "@/pages/CourseDetailPage/CourseDetailPage.jsx";
+import SignupPage from "@/pages/SignupPage/SignupPage.jsx";
 
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
 
                 </Route>
                 <Route path="/" element={<HomePage/>} />
-                {/*<Route path="/signup" element={<SignupPage />} />*/}
+                <Route path="/signup" element={<SignupPage />} />
                 <Route path="/courses" element={<CoursesPage />} />
                 <Route path="/courses-detail" element={<CourseDetailPage/>} />
 
