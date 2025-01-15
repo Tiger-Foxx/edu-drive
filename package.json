@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
-  "homepage": "https://Tiger-Foxx.github.io/FormatPlus-Presentation",
+  "homepage": "https://tiger-foxx.github.io/FormatPlus-Presentation",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
