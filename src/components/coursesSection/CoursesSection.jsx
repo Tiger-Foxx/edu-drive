@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Star, Users, Clock, Send } from 'lucide-react';
 import './CoursesSection.css';
+import {useNavigate} from "react-router-dom";
 
 const CoursesSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -111,7 +112,7 @@ const CoursesSection = () => {
             slideElement.style.transform = `translateX(-${currentSlide * translatePercentage}%)`;
         }
     }, [currentSlide, slidesToShow]);
-
+    const navigate = useNavigate();
     return (
         <section className="courses-section">
             <div className="courses-container">
@@ -185,8 +186,11 @@ const CoursesSection = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <button className="enroll-button">
-                                    S&#39;inscrire maintenant
+                                <button className="enroll-button"  >
+                                    <a href='/courses-detail'>
+                                        S&#39;inscrire maintenant
+                                    </a>
+
                                 </button>
                             </div>
                         ))}

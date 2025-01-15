@@ -132,15 +132,15 @@ const Footer = () => {
 
                 {/* Copyright et liens légaux */}
                 <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
-                    <p>© {currentYear} SkillHub. Tous droits réservés.</p>
+                    <p>© {currentYear} Fox. Tous droits réservés.</p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
                         <Link to="/privacy" className="hover:text-blue-600 transition-colors duration-200">
                             Politique de confidentialité
                         </Link>
-                        <Link to="/terms" className="hover:text-blue-600 transition-colors duration-200">
+                        <Link to="/privacy" className="hover:text-blue-600 transition-colors duration-200">
                             Conditions d&#39;utilisation
                         </Link>
-                        <Link to="/legal" className="hover:text-blue-600 transition-colors duration-200">
+                        <Link to="/privacy" className="hover:text-blue-600 transition-colors duration-200">
                             Mentions légales
                         </Link>
                     </div>

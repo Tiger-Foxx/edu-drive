@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './CourseDetailPage.css';
 
 const CourseDetailPage = () => {
-    const [isAuthenticated] = useState(true);
+    const [isAuthenticated] = useState(false);
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white pt-20">
@@ -16,7 +16,7 @@ const CourseDetailPage = () => {
                         <div className="lg:col-span-3">
                             <div className="relative rounded-2xl overflow-hidden shadow-2xl bg-black">
                                 <div className="aspect-w-16 aspect-h-9">
-                                    {isAuthenticated ? (
+
                                         <video
                                             className="w-full h-full object-cover"
                                             controls
@@ -25,19 +25,7 @@ const CourseDetailPage = () => {
                                             <source src="Macbook-Air-localhost.mp4" type="video/mp4" />
                                             Votre navigateur ne supporte pas la lecture vidéo.
                                         </video>
-                                    ) : (
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-900/90 text-white">
-                                            <Lock className="w-16 h-16 mb-4" />
-                                            <h3 className="text-2xl font-bold mb-4">Accès Restreint</h3>
-                                            <Link
-                                                to="/signup"
-                                                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 rounded-full
-                                                transition-all duration-300 hover:shadow-lg transform hover:-translate-y-1"
-                                            >
-                                                S&#39;inscrire pour accéder
-                                            </Link>
-                                        </div>
-                                    )}
+
                                 </div>
                             </div>
                         </div>
@@ -57,10 +45,7 @@ const CourseDetailPage = () => {
                                         <BookOpen className="w-4 h-4 mr-2" />
                                         4 modules
                                     </span>
-                                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-blue-50 text-blue-700">
-                                        <Award className="w-4 h-4 mr-2" />
-                                        Certificat
-                                    </span>
+
                                 </div>
 
                                 {isAuthenticated ? (
@@ -133,47 +118,6 @@ const CourseDetailPage = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl p-8 shadow-lg border border-gray-100">
-                            <h2 className="text-2xl font-bold mb-6 text-gray-900">
-                                Programme détaillé
-                            </h2>
-                            <div className="space-y-6">
-                                {[
-                                    {
-                                        title: 'Module 1: Fondamentaux du Marketing Digital',
-                                        duration: '3 heures',
-                                        content: 'Introduction aux concepts clés et aux stratégies de base'
-                                    },
-                                    {
-                                        title: 'Module 2: SEO et Content Marketing',
-                                        duration: '4 heures',
-                                        content: 'Optimisation pour les moteurs de recherche et création de contenu'
-                                    },
-                                    {
-                                        title: 'Module 3: Social Media Marketing',
-                                        duration: '3 heures',
-                                        content: 'Stratégies avancées pour les réseaux sociaux'
-                                    },
-                                    {
-                                        title: 'Module 4: Analytics et Optimisation',
-                                        duration: '2 heures',
-                                        content: 'Mesure et amélioration des performances'
-                                    }
-                                ].map((module, index) => (
-                                    <div key={index} className="border-l-4 border-blue-600 pl-4">
-                                        <h3 className="text-lg font-semibold text-gray-900">
-                                            {module.title}
-                                        </h3>
-                                        <p className="text-sm text-blue-600 mt-1">
-                                            Durée: {module.duration}
-                                        </p>
-                                        <p className="text-gray-700 mt-2">
-                                            {module.content}
-                                        </p>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
                     </div>
 
                     {/* Sidebar */}

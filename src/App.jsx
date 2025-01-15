@@ -9,6 +9,9 @@ import ProfileSection from "./pages/UserSpace/ProfileSection/ProfileSection.jsx"
 import CoursesPage from "./pages/Courses/CoursesPage.jsx";
 import CourseDetailPage from "@/pages/CourseDetailPage/CourseDetailPage.jsx";
 import SignupPage from "@/pages/SignupPage/SignupPage.jsx";
+import LoginPage from "@/pages/SigninPage/LoginPage.jsx";
+import AboutPage from "@/pages/AboutPage/AboutPage.jsx";
+import LegalPage from "@/pages/Privacy/Privacy.jsx";
 
 
 function App() {
@@ -29,8 +32,12 @@ function App() {
                 </Route>
                 <Route path="/" element={<HomePage/>} />
                 <Route path="/signup" element={<SignupPage />} />
+                <Route path="/signin" element={<LoginPage />} />
+                <Route path="/login" element={<LoginPage />} />
                 <Route path="/courses" element={<CoursesPage />} />
                 <Route path="/courses-detail" element={<CourseDetailPage/>} />
+                <Route path="/about" element={<AboutPage/>} />
+                <Route path="/privacy" element={<LegalPage/>} />
 
             </Routes>
             {showFooter && <Footer />}

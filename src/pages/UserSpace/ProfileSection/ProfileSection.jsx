@@ -1,4 +1,4 @@
-import  { useState } from 'react';
+import {useEffect, useState} from 'react';
 import {
     User,
     Mail,
@@ -15,14 +15,19 @@ const ProfileSection = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [formData, setFormData] = useState({
-        name: 'Jean Dupont',
-        email: 'jean.dupont@example.com',
-        phone: '+237 612345678',
+        username: '',
+        email: '',
+        phone_number: '',
         currentPassword: '',
         newPassword: '',
-        confirmPassword: ''
+        confirmPassword: '',
+        id: 1,
+        is_paid: false,
+        sponsor_code: "PHJTW0QQX35G",
+        telegram_group_joined: false,
+        wallet_balance: "0.00",
     });
-    const [originalData] = useState({ ...formData });
+    const [originalData, setOriginalData] = useState({ ...formData });
 
     const handleChange = (e) => {
         setFormData({
@@ -30,6 +35,14 @@ const ProfileSection = () => {
             [e.target.name]: e.target.value
         });
     };
+    useEffect(() => {
+        let user = localStorage.getItem('user');
+        if (user) {
+            user = JSON.parse(user);
+            setFormData(user);
+            setOriginalData({...formData});
+        }
+    }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -45,6 +58,7 @@ const ProfileSection = () => {
         setFormData(originalData);
         setIsEditing(false);
     };
+
 
     return (
         <div className="space-y-6">
@@ -108,7 +122,7 @@ const ProfileSection = () => {
                                 <input
                                     type="text"
                                     name="name"
-                                    value={formData.name}
+                                    value={formData.username}
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
@@ -142,7 +156,7 @@ const ProfileSection = () => {
                                 <input
                                     type="tel"
                                     name="phone"
-                                    value={formData.phone}
+                                    value={formData.phone_number}
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"

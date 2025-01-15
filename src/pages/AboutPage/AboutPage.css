@@ -1,0 +1,51 @@
+/* src/styles/AboutPage.css */
+.hero-gradient {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+
+.animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.stagger-delay-1 { animation-delay: 0.2s; }
+.stagger-delay-2 { animation-delay: 0.4s; }
+.stagger-delay-3 { animation-delay: 0.6s; }
+
+.feature-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px -5px rgba(37, 99, 235, 0.2);
+}
+
+.section-divider {
+    position: relative;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb 0%, transparent 100%);
+}
+
+.quote-bg {
+    background-image: radial-gradient(circle at 50% 50%, #2563eb0d 0%, transparent 70%);
+}
+
+.africa-map-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='600' height='600' viewBox='0 0 600 600' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M300 550C439.71 550 550 439.71 550 300C550 160.29 439.71 50 300 50C160.29 50 50 160.29 50 300C50 439.71 160.29 550 300 550Z' stroke='%232563eb' stroke-width='2' stroke-dasharray='4 4'/%3E%3C/svg%3E");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.1;
+}

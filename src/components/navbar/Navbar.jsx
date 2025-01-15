@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronDown, Menu, X, Users, BookOpen, Gift,User2 } from 'lucide-react';
+import { ChevronDown, Menu, X, Users, BookOpen, Gift,User2 ,SearchIcon} from 'lucide-react';
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +28,14 @@ const Navbar = () => {
             ]
         },
         {
+            label: 'A propos',
+            icon: <SearchIcon className="w-4 h-4" />,
+            path: '/about',
+            submenu: [
+                { label: 'A propos', path: '/about' },
+            ]
+        },
+        {
             label: 'Mon espace',
             icon: <User2 className="w-4 h-4" />,
             submenu: [
@@ -40,9 +48,7 @@ const Navbar = () => {
             label: 'Communauté',
             icon: <Users className="w-4 h-4" />,
             submenu: [
-                { label: 'Forum', path: '/forum' },
                 { label: 'Canal Telegram', path: '/telegram' },
-                { label: 'Événements', path: '/events' }
             ]
         }
     ];
@@ -70,7 +76,7 @@ const Navbar = () => {
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
                             <img src="Google_Drive_logo.png" alt="Logo" className="h-8 w-8" />
-                            <span className="font-bold text-xl text-gray-900">Edu-Drive</span>
+                            <span className="font-bold text-xl text-gray-900">FormatPlus</span>
                         </Link>
 
                         {/* Desktop Navigation */}

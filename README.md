@@ -1,7 +1,7 @@
-# **Edu-Drive - Plateforme de Vente de Formations**
+# **FormatPlus - Plateforme de Vente de Formations**
 
 ## **Description**
-Edu-Drive est un site web dédié à la vente de formations en ligne, stockées sur Google Drive. Les utilisateurs peuvent s'inscrire grâce à un système de parrainage, accéder à des formations après paiement, et bénéficier de commissions sur les inscriptions effectuées via leur lien de parrainage.
+FormatPlus est un site web dédié à la vente de formations en ligne, stockées sur Google Drive. Les utilisateurs peuvent s'inscrire grâce à un système de parrainage, accéder à des formations après paiement, et bénéficier de commissions sur les inscriptions effectuées via leur lien de parrainage.
 
 ## **Fonctionnalités Principales**
 ### **1. Page d'accueil**
