@@ -9,6 +9,7 @@ const __dirname = dirname(__filename); // Dossier du fichier
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/FormatPlus-Presentation/', // Chemin correspondant au nom du dépôt
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),    },
