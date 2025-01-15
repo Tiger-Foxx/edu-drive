@@ -7,11 +7,11 @@ import ReferralSection from "./pages/UserSpace/ReferralSection/ReferralSection.j
 import HelpSection from "./pages/UserSpace/HelpSection/HelpSection.jsx";
 import ProfileSection from "./pages/UserSpace/ProfileSection/ProfileSection.jsx";
 import CoursesPage from "./pages/Courses/CoursesPage.jsx";
-import CourseDetailPage from "@/pages/CourseDetailPage/CourseDetailPage.jsx";
-import SignupPage from "@/pages/SignupPage/SignupPage.jsx";
-import LoginPage from "@/pages/SigninPage/LoginPage.jsx";
-import AboutPage from "@/pages/AboutPage/AboutPage.jsx";
-import LegalPage from "@/pages/Privacy/Privacy.jsx";
+import CourseDetailPage from "./pages/CourseDetailPage/CourseDetailPage.jsx";
+import SignupPage from "./pages/SignupPage/SignupPage.jsx";
+import LoginPage from "./pages/SigninPage/LoginPage.jsx";
+import AboutPage from "./pages/AboutPage/AboutPage.jsx";
+import LegalPage from "./pages/Privacy/Privacy.jsx";
 
 
 function App() {
