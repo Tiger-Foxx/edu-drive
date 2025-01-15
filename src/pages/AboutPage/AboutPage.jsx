@@ -56,8 +56,8 @@ const AboutPage = () => {
                                     key={index}
                                     className={`feature-card bg-white p-6 rounded-xl shadow-lg animate-fade-up stagger-delay-${index + 1}`}
                                 >
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-3">{feature.title}</h3>
-                                    <p className="text-gray-600">{feature.description}</p>
+                                    <h3 className="text-xl font-semibold text-white-900 mb-3">{feature.title}</h3>
+                                    <p className="text-white-600">{feature.description}</p>
                                 </div>
                             ))}
                         </div>
