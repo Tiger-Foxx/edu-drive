@@ -1,3 +1,23 @@
+/* Particles.js container */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+/* Typed.js cursor */
+.typed-cursor {
+    opacity: 1;
+    animation: typedjsBlink 0.7s infinite;
+    color: #d6dc00;
+}
+
+@keyframes typedjsBlink {
+    50% {
+        opacity: 0;
+    }
+}
 
 @keyframes float {
     0%, 100% {
@@ -127,4 +147,12 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+
+
+@media screen and (max-width: 668px){} {
+.intro{
+    font-size: 35px;
+}
 }

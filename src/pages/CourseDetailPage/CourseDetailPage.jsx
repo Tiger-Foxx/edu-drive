@@ -131,7 +131,6 @@ const CourseDetailPage = () => {
                                     {[
                                         { icon: PlayCircle, text: '12 heures de vidéo HD' },
                                         { icon: FileText, text: 'Resources téléchargeables' },
-                                        { icon: Award, text: 'Certificat de réussite' },
                                         { icon: ExternalLink, text: 'Accès à vie' }
                                     ].map((item, index) => (
                                         <li key={index} className="flex items-center text-gray-700">

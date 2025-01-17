@@ -1,10 +1,94 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight, Users, Award, BookOpen, Target } from 'lucide-react';
-import './HeroSection.css'
+import { useEffect, useRef } from 'react';
+import Typed from 'typed.js';
+// import {Particles} from 'particles.js';
+import './HeroSection.css';
 
 const HeroSection = () => {
+    const typedRef = useRef(null);
+    const particlesRef = useRef(null);
+
+    useEffect(() => {
+        // Initialize Typed.js
+        const typed = new Typed(typedRef.current, {
+            strings: ['Marketing digital', 'Trading', 'Développement', 'Business'],
+            typeSpeed: 50,
+            backSpeed: 50,
+            backDelay: 2000,
+            loop: true,
+            showCursor: true,
+            cursorChar: '|',
+
+
+        });
+
+        // Initialize particles.js
+        if (particlesRef.current) {
+            window.particlesJS('particles-js', {
+                particles: {
+                    number: {
+                        value: 75,
+                        density: {
+                            enable: true,
+                            value_area: 800
+                        }
+                    },
+                    color: {
+                        value: '#60a5fa'
+                    },
+                    shape: {
+                        type: 'circle'
+                    },
+                    opacity: {
+                        value: 0.5,
+                        random: false
+                    },
+                    size: {
+                        value: 3,
+                        random: true
+                    },
+                    line_linked: {
+                        enable: true,
+                        distance: 150,
+                        color: '#60a5fa',
+                        opacity: 0.4,
+                        width: 1
+                    },
+                    move: {
+                        enable: true,
+                        speed: 5,
+                        direction: 'none',
+                        random: false,
+                        straight: false,
+                        out_mode: 'out',
+                        bounce: false
+                    }
+                },
+                interactivity: {
+                    detect_on: 'canvas',
+                    events: {
+                        onhover: {
+                            enable: true,
+                            mode: 'grab'
+                        },
+                        resize: true
+                    }
+                },
+                retina_detect: true
+            });
+        }
+
+        return () => {
+            typed.destroy();
+        };
+    }, []);
+
     return (
         <section className="relative min-h-screen bg-gradient-to-br from-white via-blue-50 to-white overflow-hidden">
+            {/* Particles background */}
+            <div id="particles-js" ref={particlesRef} className="absolute inset-0" />
+
             {/* Animated background elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-[40%] -left-[20%] w-[70%] h-[70%] rounded-full bg-blue-100/30 blur-3xl animate-pulse-slow" />
@@ -30,26 +114,13 @@ const HeroSection = () => {
                             <span>Rejoignez notre communauté d&#39;apprenants</span>
                         </div>
 
-                        {/* Main heading with animated gradient */}
-                        <h1 className="text-5xl lg:text-5xl font-bold leading-tight">
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 animate-gradient">
-                Transformez
-              </span>
+                        {/* Animated heading with Typed.js */}
+                        <h1 className="text-5xl lg:text-5xl font-bold leading-tight intro">
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-blue-500 to-blue-600 animate-gradient">
+                                FormatPlus :
+                            </span>
                             <br />
-                            <span className="relative">
-                votre avenir
-                <svg className="absolute -bottom-2 left-0 w-full" height="4" viewBox="0 0 300 4" fill="none">
-                  <path d="M0 2L300 2" stroke="url(#paint0_linear)" strokeWidth="3" strokeDasharray="6 6"/>
-                  <defs>
-                    <linearGradient id="paint0_linear" x1="0" y1="2" x2="300" y2="2">
-                      <stop stopColor="#2563eb" />
-                      <stop offset="1" stopColor="#60a5fa" />
-                    </linearGradient>
-                  </defs>
-                </svg>
-              </span>
-                            <br />
-                            avec nos formations
+                            <span className="relative text-blue-600" ref={typedRef}></span>
                         </h1>
 
                         {/* Description with fade-in effect */}
@@ -65,9 +136,9 @@ const HeroSection = () => {
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity" />
                                 <span className="relative flex items-center">
-                  Commencer maintenant
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                </span>
+                                    Commencer maintenant
+                                    <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
+                                </span>
                             </Link>
                             <Link
                                 to="/referral"
@@ -109,7 +180,6 @@ const HeroSection = () => {
                                 alt="Education"
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                             />
-
                             {/* Enhanced Floating cards */}
                             <div className="absolute -left-6 top-1/4 animate-float">
                                 <div className="relative">

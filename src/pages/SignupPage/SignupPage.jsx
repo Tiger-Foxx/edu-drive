@@ -41,7 +41,6 @@ const SignupPage = () => {
         } else if (!/^\d{9,}$/.test(formData.phone.replace(/\s/g, ''))) {
             newErrors.phone = 'Numéro de téléphone invalide';
         }
-        if (!formData.referralCode.trim()) newErrors.referralCode = 'Le code de parrainage est requis';
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
