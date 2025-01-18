@@ -12,7 +12,7 @@ const HeroSection = () => {
     useEffect(() => {
         // Initialize Typed.js
         const typed = new Typed(typedRef.current, {
-            strings: ['Marketing digital', 'Trading', 'Développement', 'Business'],
+            strings: ['Formation', 'Certification', 'Service client 24/7', 'Payement simple'],
             typeSpeed: 50,
             backSpeed: 50,
             backDelay: 2000,
