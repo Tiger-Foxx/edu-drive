@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {BrowserRouter, BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
 import Navbar from "./components/navbar/Navbar.jsx";
 import UserSpace from "./pages/UserSpace/UserSpace.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
@@ -12,6 +12,7 @@ import SignupPage from "./pages/SignupPage/SignupPage.jsx";
 import LoginPage from "./pages/SigninPage/LoginPage.jsx";
 import AboutPage from "./pages/AboutPage/AboutPage.jsx";
 import LegalPage from "./pages/Privacy/Privacy.jsx";
+import PayementTankYouPage from "@/pages/Payment/PayementTankYouPage.jsx";
 
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
                 <Route path="/courses-detail" element={<CourseDetailPage/>} />
                 <Route path="/about" element={<AboutPage/>} />
                 <Route path="/privacy" element={<LegalPage/>} />
+                <Route path="/payment/thank-you" element={<PayementTankYouPage/>} />
 
             </Routes>
             {showFooter && <Footer />}
@@ -48,9 +50,9 @@ function App() {
 // Pour inclure le Router avec le composant App
 function Root() {
     return (
-        <Router>
+        <BrowserRouter>
             <App />
-        </Router>
+        </BrowserRouter>
     );
 }
 
