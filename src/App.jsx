@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
+import {BrowserRouter, BrowserRouter as Router, Route, Routes, useLocation} from "react-router-dom";
 import Navbar from "./components/navbar/Navbar.jsx";
 import UserSpace from "./pages/UserSpace/UserSpace.jsx";
 import HomePage from "./pages/Home/HomePage.jsx";
@@ -48,9 +48,9 @@ function App() {
 // Pour inclure le Router avec le composant App
 function Root() {
     return (
-        <Router>
+        <BrowserRouter>
             <App />
-        </Router>
+        </BrowserRouter>
     );
 }
 
