@@ -48,78 +48,99 @@ const SignupPage = () => {
         }));
     };
 
-    // const initiatePayment = () => {
-    //     // Placeholder for payment initiation logic
-    //     /**
-    //      exemple de ce qui se trouve dans formDATA :
-    //      {
-    //      "name": "FOX DONFACK PASCAL ARTHUR MONTGOMERY",
-    //      "email": "donfackarthur750@gmail.com",
-    //      "phone": "658866639",
-    //      "referralCode": "",
-    //      "password": "55555555",
-    //      "confirmPassword": "55555555",
-    //      "paymentMethod": "mobile_money",
-    //      "currency": "XAF"
-    //      }
-    //
-    //      si currency == XAF on utilisera L'api de moneroo et si c'est XOF on utilisera payfusion
-    //      *
-    //      * */
-    //     // You'll integrate your specific payment gateway here
-    //
-    // };
-
 
     const initiatePayment = async () => {
-        console.log('Initiating payment.. les donnes de paiement ', formData);
+        console.log('Initiating payment...', formData);
+        toastId.current= toast.info("Veuillez patienter...", { position: 'top-right' , isLoading:true});
 
         try {
-            // Préparer les données pour l'API Moneroo
-            const paymentData = {
-                amount: 1000, // Montant pour l'inscription (1000 XAF)
-                currency: formData.currency, // "XAF" ou "XOF"
-                description: "Paiement pour l'inscription",
-                customer: {
-                    email: formData.email,
-                    first_name: formData.name, // Prénom
-                    last_name: formData.name, // Nom de famille
-                },
-                return_url: "http://localhost:3000/payment/thank-you", // URL de redirection après paiement
-                metadata: {
-                    user_id: formData.userId, // ID utilisateur (obtenu après création du compte)
-                    payment_type: "inscription",
-                },
-            };
+            // Stocker les informations nécessaires dans localStorage
+            localStorage.setItem('userId', formData.userId);
+            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'moneroo' : 'moneyfusion');
 
-            // Envoyer la requête à Moneroo
-            const response = await axios.post(
-                "https://api.moneroo.io/v1/payments/initialize",
-                paymentData,
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer YOUR_SECRET_KEY`, // Remplacez par votre clé secrète
-                        Accept: "application/json",
+            if (formData.currency === 'XAF') {
+                // Logique Moneroo
+                const paymentData = {
+                    amount: 50,
+                    currency: 'XAF',
+                    description: "Paiement pour l'inscription",
+                    customer: {
+                        email: formData.email,
+                        first_name: formData.name,
+                        last_name: formData.name,
                     },
+                    return_url: `${window.location.origin}/payment/thank-you`,
+                    metadata: {
+                        user_id: formData.userId,
+                        payment_type: "inscription",
+                    },
+                };
+
+                const response = await axios.post(
+                    "https://api.moneroo.io/v1/payments/initialize",
+                    paymentData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer pvk_8vyskz|01JJPRRVQA338WGDYKKZ00KE1Q`,
+                            Accept: "application/json",
+                        },
+                    }
+                );
+
+                if (response.status === 201) {
+                    toast.update(toastId.current, {
+                        render: "Redirection...",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2500, // Notification disparaît après 4 secondes
+
+                    });
+                    window.location.href = response.data.data.checkout_url;
                 }
-            );
-
-            // Vérifier si la réponse est correcte
-            if (response.status === 201) {
-                const { checkout_url } = response.data.data;
-                console.log("Lien de redirection :", checkout_url);
-
-                // Rediriger l'utilisateur vers le lien de paiement
-                window.location.href = checkout_url;
             } else {
-                throw new Error(`Échec de la requête avec le code ${response.status}`);
+                // Logique MoneyFusion
+                const paymentData = {
+                    totalPrice: 50,
+                    article: [{
+                        inscription: 50,
+                    }],
+                    personal_Info: [{
+                        userId: formData.userId,
+                        orderId: Date.now(),
+                    }],
+                    numeroSend: formData.phone,
+                    nomclient: formData.name,
+                    return_url: `${window.location.origin}/payment/thank-you`
+                };
+
+                const response = await axios.post(
+                    'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
+                    paymentData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+
+                if (response.data.statut) {
+                    localStorage.setItem('paymentToken', response.data.token);
+                    toast.update(toastId.current, {
+                        render: "Redirection...",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2500, // Notification disparaît après 4 secondes
+
+                    });
+                    window.location.href = response.data.url;
+                }
             }
         } catch (error) {
-            console.error("Erreur lors de l'initialisation du paiement :", error.message);
+            toast.error("Erreur lors de l'initialisation du paiement : " + error.message);
+            console.error("Erreur lors de l'initialisation du paiement :", error);
         }
     };
-
 
 
     const validateStep1 = () => {
