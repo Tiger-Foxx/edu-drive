@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Lock, Mail, AlertCircle, LogIn } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './LoginPage.css';
+import {SERVER_BASE_URL} from "@/Config.jsx";
 
 const LoginPage = () => {
     const [formData, setFormData] = useState({
@@ -41,7 +42,7 @@ const LoginPage = () => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:8000/login/', {
+            const response = await fetch(`${SERVER_BASE_URL}/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

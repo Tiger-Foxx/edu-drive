@@ -124,7 +124,7 @@ const HeroSection = () => {
 
                         {/* Description with fade-in effect */}
                         <p className="text-lg text-gray-600 max-w-xl animate-fade-in">
-                            {`Accédez à des formations de qualité et bénéficiez de notre système de parrainage exclusif avec jusqu'à 40% de commission.` }
+                            { `Accédez à des formations de qualité et bénéficiez de notre système de parrainage exclusif avec jusqu'à 40% de commission.`  }
                         </p>
 
                         {/* CTA buttons with enhanced hover effects */}
