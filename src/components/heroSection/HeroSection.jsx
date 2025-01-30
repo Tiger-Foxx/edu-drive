@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import Typed from 'typed.js';
 // import {Particles} from 'particles.js';
 import './HeroSection.css';
+import {checkUserPaid, getCurrentUser} from "@/services/userService.jsx";
 
 const HeroSection = () => {
     const typedRef = useRef(null);
@@ -125,7 +126,7 @@ const HeroSection = () => {
 
                         {/* Description with fade-in effect */}
                         <p className="text-lg text-gray-600 max-w-xl animate-fade-in">
-                            Accédez à des formations de qualité et bénéficiez de notre système de parrainage exclusif avec jusqu&#39;à 40% de commission.
+                            { !checkUserPaid() ? `Accédez à des formations de qualité et bénéficiez de notre système de parrainage exclusif avec jusqu'à 40% de commission.` : "Salut "+ (getCurrentUser().username || getCurrentUser().nom) + " , Content de vous revoir chez FormatPlus" }
                         </p>
 
                         {/* CTA buttons with enhanced hover effects */}

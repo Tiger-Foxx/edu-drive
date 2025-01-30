@@ -2,6 +2,7 @@ import  { useState } from 'react';
 import { Lock, PlayCircle, FileText, ChevronRight, ExternalLink, BookOpen, Clock, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './CourseDetailPage.css';
+import {checkUserPaid} from "@/services/userService.jsx";
 
 const CourseDetailPage = () => {
     const [isAuthenticated] = useState(false);
@@ -48,7 +49,7 @@ const CourseDetailPage = () => {
 
                                 </div>
 
-                                {isAuthenticated ? (
+                                {checkUserPaid() ? (
                                     <a
                                         href="https://drive.google.com/yourlink"
                                         target="_blank"
@@ -65,9 +66,9 @@ const CourseDetailPage = () => {
                                         to="/signup"
                                         className="w-full inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700
                                         text-white font-semibold px-6 py-4 rounded-xl transition-all duration-300
-                                        hover:shadow-lg mb-6"
+                                        hover:shadow-lg mb-6 text-center"
                                     >
-                                        S&#39;inscrire maintenant
+                                        S&#39;inscrire maintenant pour y accéder
                                     </Link>
                                 )}
 
@@ -129,7 +130,7 @@ const CourseDetailPage = () => {
                                 </h3>
                                 <ul className="space-y-4">
                                     {[
-                                        { icon: PlayCircle, text: '12 heures de vidéo HD' },
+                                        { icon: PlayCircle, text: 'Vidéos HD' },
                                         { icon: FileText, text: 'Resources téléchargeables' },
                                         { icon: ExternalLink, text: 'Accès à vie' }
                                     ].map((item, index) => (
@@ -141,24 +142,39 @@ const CourseDetailPage = () => {
                                 </ul>
                             </div>
 
-                            {!isAuthenticated && (
                                 <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl p-6 text-white shadow-xl">
                                     <h3 className="text-xl font-bold mb-3">
                                         Commencez maintenant
                                     </h3>
-                                    <p className="mb-4 opacity-90">
-                                        Inscrivez-vous pour accéder à cette formation et à tout notre catalogue
-                                    </p>
-                                    <Link
-                                        to="/signup"
-                                        className="w-full inline-flex items-center justify-center bg-white text-blue-600
-                                        font-semibold px-6 py-3 rounded-xl transition-all duration-300
-                                        hover:shadow-lg hover:bg-blue-50"
-                                    >
-                                        S&#39;inscrire
-                                    </Link>
+                                    {!checkUserPaid()
+                                        ? <p className="mb-4 opacity-90">
+                                            Inscrivez-vous pour accéder à cette formation et à tout notre catalogue
+                                        </p>
+                                        :
+                                        <p className="mb-4 opacity-90">
+                                            Vous êtes inscrit ! accédez à votre formation maintenant !
+                                        </p>
+                                    }
+                                    {!checkUserPaid()
+                                        ? <Link
+                                            to="/signup"
+                                            className="w-full inline-flex items-center justify-center bg-white text-blue-600
+                                         font-semibold px-6 py-3 rounded-xl transition-all duration-300
+                                         hover:shadow-lg hover:bg-blue-50"
+                                        >
+                                            S&#39;inscrire
+                                        </Link>
+                                        :
+                                        <Link
+                                            to="/lien-drive-de-la-formation"
+                                            className="w-full inline-flex items-center justify-center bg-white text-blue-600
+                                         font-semibold px-6 py-3 rounded-xl transition-all duration-300
+                                         hover:shadow-lg hover:bg-blue-50"
+                                        >
+                                            Commencer
+                                        </Link>
+                                    }
                                 </div>
-                            )}
                         </div>
                     </div>
                 </div>

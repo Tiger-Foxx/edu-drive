@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight, Star, Users, Clock, Send } from 'lucide-react';
 import './CoursesSection.css';
 import {useNavigate} from "react-router-dom";
+import {checkUserPaid} from "@/services/userService.jsx";
 
 const CoursesSection = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
@@ -199,57 +200,59 @@ const CoursesSection = () => {
             </div>
 
 
-    <div className="telegram-section">
-        <div className="telegram-container">
-            <div className="telegram-content">
-                <div className="telegram-text">
-                    <h2 className="telegram-title">
-                        Rejoignez notre communauté
-                        <span className="text-gradient"> Telegram</span>
-                    </h2>
-                    <p className="telegram-description">
-                        Accédez à du contenu exclusif, des conseils d&#39;experts et connectez-vous
-                        avec d&#39;autres apprenants passionnés.
-                    </p>
-                    <div className="telegram-features">
-                        <div className="feature">
-                            <div className="feature-icon">🎯</div>
-                            <span>Contenu exclusif</span>
+            {checkUserPaid() && <div className="telegram-section">
+                <div className="telegram-container">
+                    <div className="telegram-content">
+                        <div className="telegram-text">
+                            <h2 className="telegram-title">
+                                Rejoignez notre communauté
+                                <span className="text-gradient"> Telegram</span>
+                            </h2>
+                            <p className="telegram-description">
+                                Accédez à du contenu exclusif, des conseils d&#39;experts et connectez-vous
+                                avec d&#39;autres apprenants passionnés.
+                            </p>
+                            <div className="telegram-features">
+                                <div className="feature">
+                                    <div className="feature-icon">🎯</div>
+                                    <span>Contenu exclusif</span>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">💡</div>
+                                    <span>Conseils d&#39;experts</span>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">🤝</div>
+                                    <span>Networking</span>
+                                </div>
+                            </div>
+                            <button className="telegram-button">
+                                <Send className="w-5 h-5"/>
+                                Rejoindre pour 10 000 XAF
+                            </button>
                         </div>
-                        <div className="feature">
-                            <div className="feature-icon">💡</div>
-                            <span>Conseils d&#39;experts</span>
-                        </div>
-                        <div className="feature">
-                            <div className="feature-icon">🤝</div>
-                            <span>Networking</span>
-                        </div>
-                    </div>
-                    <button className="telegram-button">
-                        <Send className="w-5 h-5"/>
-                        Rejoindre pour 10 000 XAF
-                    </button>
-                </div>
-                <div className="telegram-image">
-                    <img
-                        src="telegram.jpg"
-                        alt="Telegram Community"
-                        className="community-image"
-                    />
-                    <div className="floating-card members-card">
-                        <div className="members-content">
-                            <div className="members-icon">👥</div>
-                            <div className="members-text">
-                                <span className="members-count">5,000+</span>
-                                <span className="members-label">Membres actifs</span>
+                        <div className="telegram-image">
+                            <img
+                                src="telegram.jpg"
+                                alt="Telegram Community"
+                                className="community-image"
+                            />
+                            <div className="floating-card members-card">
+                                <div className="members-content">
+                                    <div className="members-icon">👥</div>
+                                    <div className="members-text">
+                                        <span className="members-count">5,000+</span>
+                                        <span className="members-label">Membres actifs</span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
-</section>
+            </div>}
+
+        
+        </section>
 )
     ;
 };

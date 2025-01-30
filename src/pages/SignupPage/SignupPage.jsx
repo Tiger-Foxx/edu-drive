@@ -23,6 +23,7 @@ const SignupPage = () => {
     });
     const [step, setStep] = useState(1);
     const [active, setActive] = useState(true);
+    const [PayActive, setPayActive] = useState(true)
     const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
@@ -52,7 +53,7 @@ const SignupPage = () => {
     const initiatePayment = async () => {
         console.log('Initiating payment...', formData);
         toastId.current= toast.info("Veuillez patienter...", { position: 'top-right' , isLoading:true});
-
+        setPayActive(false);
         try {
             // Stocker les informations nécessaires dans localStorage
             localStorage.setItem('userId', formData.userId);
@@ -97,11 +98,20 @@ const SignupPage = () => {
 
                     });
                     window.location.href = response.data.data.checkout_url;
+                }else{
+                    console.log('Erreur lors de l initialisation du paiement',response);
+                    toast.update(toastId.current, {
+                        render: "Erreur lors de l'initialisation du paiement",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 4000, // Notification disparaît après 4 secondes
+
+                    });
                 }
             } else {
                 // Logique MoneyFusion
                 const paymentData = {
-                    totalPrice: 50,
+                    totalPrice: 50, //minimum 200
                     article: [{
                         inscription: 50,
                     }],
@@ -135,11 +145,28 @@ const SignupPage = () => {
                     });
                     window.location.href = response.data.url;
                 }
+                else {
+                    console.log('Erreur lors de l initialisation du paiement : ',response);
+                    toast.update(toastId.current, {
+                        render: "Erreur lors de l'initialisation du paiement : " + response.data['message-money-fusion'].response_text_fr,
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 2500, // Notification disparaît après 4 secondes
+
+                    });
+                }
             }
         } catch (error) {
-            toast.error("Erreur lors de l'initialisation du paiement : " + error.message);
+            toast.update(toastId.current, {
+                render: "Erreur lors de l'initialisation du paiement : " + error.message,
+                type: "error",
+                isLoading: false,
+                autoClose: 2500, // Notification disparaît après 4 secondes
+
+            });
             console.error("Erreur lors de l'initialisation du paiement :", error);
         }
+        setPayActive(true);
     };
 
 
@@ -452,8 +479,9 @@ const SignupPage = () => {
                                             </div>
 
                                             <button
+
                                                 onClick={initiatePayment}
-                                                disabled={!formData.paymentMethod}
+                                                disabled={!formData.paymentMethod || !PayActive}
                                                 className={`w-full bg-blue-600 text-white py-4 rounded-xl mt-4
                                             ${formData.paymentMethod ? 'hover:bg-blue-700' : 'opacity-50 cursor-not-allowed'}`}
                                             >
