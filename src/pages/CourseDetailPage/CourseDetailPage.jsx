@@ -4,7 +4,7 @@ import { Lock, PlayCircle, FileText, ChevronRight, ExternalLink, BookOpen, Clock
 import { Link } from 'react-router-dom';
 import './CourseDetailPage.css';
 import { checkUserPaid } from "@/services/userService.jsx";
-import { formationService } from '@/services/formationService';
+import { formationService } from '@/services/formationService.jsx';
 
 const CourseDetailPage = () => {
     const { id } = useParams();

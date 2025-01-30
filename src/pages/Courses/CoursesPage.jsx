@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, Clock, Users, ChevronRight } from 'lucide-react';
-import { formationService } from '@/services/formationService';
+import { formationService } from '@/services/formationService.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const CoursesPage = () => {

@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight, Star, Users, Clock, Send } from 'lucide-reac
 import './CoursesSection.css';
 import {useNavigate} from "react-router-dom";
 import {checkUserPaid} from "@/services/userService.jsx";
-import {formationService} from "@/services/formationService.js";
+import {formationService} from "@/services/formationService.jsx";
 
 const CoursesSection = () => {
     const [courses, setCourses] = useState([]);
