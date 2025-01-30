@@ -1,7 +1,7 @@
 // src/services/formationService.jsx
 import axios from 'axios';
 import {SERVER_BASE_URL} from "@/Config.jsx";
-
+//conf
 export const formationService = {
     // Récupérer les formations populaires (limité à 5 par défaut)
     async getPopularFormations(limit = 5) {
