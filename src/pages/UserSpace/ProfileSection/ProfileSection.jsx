@@ -15,17 +15,16 @@ const ProfileSection = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [showSuccess, setShowSuccess] = useState(false);
     const [formData, setFormData] = useState({
-        username: '',
-        email: '',
-        phone_number: '',
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: '',
-        id: 1,
-        is_paid: false,
-        sponsor_code: "PHJTW0QQX35G",
-        telegram_group_joined: false,
-        wallet_balance: "0.00",
+        nom: null,
+        email: null,
+        phone_number: null,
+        newPassword: null,
+        confirmPassword: null,
+        id: null,
+        is_paid: null,
+        sponsor_code: null,
+        telegram_group_joined: null,
+        wallet_balance: null,
     });
     const [originalData, setOriginalData] = useState({ ...formData });
 
@@ -40,7 +39,7 @@ const ProfileSection = () => {
         if (user) {
             user = JSON.parse(user);
             setFormData(user);
-            setOriginalData({...formData});
+            setOriginalData(user);  // ✅ Correction
         }
     }, []);
 
@@ -75,7 +74,10 @@ const ProfileSection = () => {
                         </div>
                     </div>
                     <button
-                        onClick={() => setIsEditing(!isEditing)}
+                        onClick={() => {
+                            setIsEditing(!isEditing);
+                            console.log("isEditing:", !isEditing);
+                        }}
                         className={`flex items-center px-4 py-2 rounded-lg transition-colors
               ${isEditing
                             ? 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -121,8 +123,8 @@ const ProfileSection = () => {
                                 </div>
                                 <input
                                     type="text"
-                                    name="name"
-                                    value={formData.username}
+                                    name="nom"
+                                    value={formData.nom || ''}  // Ajout de `|| ''` pour éviter `undefined`
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
@@ -139,7 +141,8 @@ const ProfileSection = () => {
                                 <input
                                     type="email"
                                     name="email"
-                                    value={formData.email}
+                                    value={formData.email || ''}  // Ajout de `|| ''` pour éviter `undefined`
+
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"
@@ -155,8 +158,8 @@ const ProfileSection = () => {
                                 </div>
                                 <input
                                     type="tel"
-                                    name="phone"
-                                    value={formData.phone_number}
+                                    name="phone_number"
+                                    value={formData.phone_number || ''}
                                     onChange={handleChange}
                                     disabled={!isEditing}
                                     className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-50 disabled:text-gray-500"

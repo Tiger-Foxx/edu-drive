@@ -68,7 +68,7 @@ input:focus {
 /* Enhanced focus states */
 button:focus, a:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.4);
+    /*box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.4);*/
 }
 
 /* Responsive adjustments */

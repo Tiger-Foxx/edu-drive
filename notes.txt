@@ -1,0 +1,399 @@
+actuellement je suis entrain de faire mon application de vente de formations sur google drive , et pour posseder un compte actif mes utilisateur doivent payer a l'inscription , selon ce processus  (mon application est basee sur react et django rest framework) :
+
+mon forulaire d'inscription adeux etapes , l'utilisateur s'inscrit d'abord :
+const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        phone: "",
+        referralCode: "",
+        password: "",
+        confirmPassword: "",
+        paymentMethod: null,
+        currency: null,
+        userId:null
+    });
+  const handleSubmit = async (e) => {
+        e.preventDefault();
+        setActive(false);
+        toastId.current= toast.info("Veuillez patienter...", { position: 'top-right' , isLoading:true});
+        if (step === 1 && validateStep1()) {
+            try {
+                console.log('Donnees a envoyer ',{
+                    username: formData.name,
+                    email: formData.email,
+                    phone_number: formData.phone,
+                    password: formData.password,
+                    sponsor_code_input: formData.referralCode || null,
+                })
+                const response = await axios.post(SERVER_BASE_URL+ "/register/", {
+                    nom: formData.name,
+                    email: formData.email,
+                    phone_number: formData.phone,
+                    password: formData.password,
+                    sponsor_code_input: formData.referralCode || null,
+                });
+
+
+
+                const { user, message } = response.data;
+                toast.update(toastId.current, {
+                    render: "Utilisateur créé avec succès ! vous allez procéder au paiement",
+                    type: "success",
+                    isLoading: false,
+                    autoClose: 4000, // Notification disparaît après 4 secondes
+
+                });
+                setStep(2); // Passer à l'étape 2
+                console.log("Utilisateur créé : ", user);
+                formData.userId=user.id;
+            } catch (error) {
+                if (error.response && error.response.data) {
+                    const backendErrors = error.response.data;
+                    toast.update(toastId.current, {
+                        render: "Erreur : " + backendErrors.non_field_errors || "Erreur inconnue",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 4000, // Notification disparaît après 4 secondes
+                    });
+
+                } else {
+                    console.log('erreur inconnue',error);
+                    toast.update(toastId.current, {
+                        render: "Une erreur inattendue s'est produite.",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 4000, // Notification disparaît après 4 secondes
+
+                    });
+                }
+            }
+        }
+        setActive(true);
+    };
+
+cela va vers ce viewset :
+ca cree mon utilisateur et le renvoie :
+
+class UserRegistrationView(views.APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        # Vérifier si un utilisateur avec ce numéro ou cet email existe déjà
+        email = request.data.get('email', '').strip()
+        phone_number = request.data.get('phone_number', '').strip()
+
+        existing_user = User.objects.filter(
+            Q(email=email) | Q(phone_number=phone_number),
+            # is_active=False  # On ne vérifie que les comptes inactifs
+        ).first()
+
+        if existing_user:
+            # Si un utilisateur inactif existe déjà, renvoyer ses données
+            user_serializer = UserSerializer(existing_user)
+            return Response({
+                'message': 'Utilisateur déjà inscrit mais en attente de paiement.',
+                'user': user_serializer.data
+            }, status=status.HTTP_200_OK)
+
+        # Sinon, créer un nouvel utilisateur
+        serializer = UserRegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save()
+            user_serializer = UserSerializer(user)
+            return Response({
+                'message': 'Inscription réussie, en attente de paiement.',
+                'user': user_serializer.data
+            }, status=status.HTTP_201_CREATED)
+        logger.error("Erreurs de validation : %s", serializer.errors)  # Log des erreurs
+
+
+        # En cas d'erreur de validation
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+puis la seconde etape du formulaire :
+
+ const initiatePayment = async () => {
+        console.log('Initiating payment.. les donnes de paiement ', formData);
+
+        try {
+            // Préparer les données pour l'API Moneroo
+            const paymentData = {
+                amount: 1000, // Montant pour l'inscription (1000 XAF)
+                currency: formData.currency, // "XAF" ou "XOF"
+                description: "Paiement pour l'inscription",
+                customer: {
+                    email: formData.email,
+                    first_name: formData.name, // Prénom
+                    last_name: formData.name, // Nom de famille
+                },
+                return_url: "http://localhost:3000/payment/thank-you", // URL de redirection après paiement
+                metadata: {
+                    user_id: formData.userId, // ID utilisateur (obtenu après création du compte)
+                    payment_type: "inscription",
+                },
+            };
+
+            // Envoyer la requête à Moneroo
+            const response = await axios.post(
+                "https://api.moneroo.io/v1/payments/initialize",
+                paymentData,
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer YOUR_SECRET_KEY`, // Remplacez par votre clé secrète
+                        Accept: "application/json",
+                    },
+                }
+            );
+
+            // Vérifier si la réponse est correcte
+            if (response.status === 201) {
+                const { checkout_url } = response.data.data;
+                console.log("Lien de redirection :", checkout_url);
+
+                // Rediriger l'utilisateur vers le lien de paiement
+                window.location.href = checkout_url;
+            } else {
+                throw new Error(`Échec de la requête avec le code ${response.status}`);
+            }
+        } catch (error) {
+            console.error("Erreur lors de l'initialisation du paiement :", error.message);
+        }
+    };
+
+le tout pour cette api de moneroo , ja'i donc prepare la vue payment thankyou , elle est sensee cheker si le paeiment est fait et si il est fait , alors elle cree un objet paement au backend qui va aussi activer le compte du user:
+const PaymentThankYouPage = () => {
+    useEffect(() => {
+        // Récupérer les paramètres de l'URL
+        const queryParams = new URLSearchParams(window.location.search);
+        const transaction_id = queryParams.get("paymentId");
+        const paymentStatus = queryParams.get("paymentStatus");
+        const userId = localStorage.getItem("userId"); // Supposez que l'ID utilisateur est stocké dans le localStorage
+
+        if (paymentStatus === "completed") {
+            // Envoyer les données au backend pour créer un objet Payment
+            axios
+                .post("/api/payments/verify-and-create/", {
+                    transaction_id,
+                    user_id: userId,
+                })
+                .then((response) => {
+                    console.log("Paiement enregistré :", response.data);
+                    alert("Paiement réussi !");
+                })
+                .catch((error) => {
+                    console.error("Erreur lors de l'enregistrement du paiement :", error.message);
+                });
+        } else {
+            alert("Le paiement a échoué. Veuillez réessayer.");
+        }
+    }, []);
+
+    return <div>Merci pour votre paiement. Nous traitons votre demande...</div>;
+};
+
+export default PaymentThankYouPage;
+
+
+et donc que quand ca arrive au backend ici :
+class PaymentViewSet(viewsets.ModelViewSet):
+    serializer_class = PaymentSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return Payment.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        payment = serializer.save(user=self.request.user)
+        # Ici, vous feriez l'intégration avec votre API de paiement
+        # et mettriez à jour le statut en fonction de la réponse
+
+    @action(detail=True, methods=['POST'])
+    def confirm_payment(self, request, pk=None):
+        payment = self.get_object()
+        # Logique de confirmation de paiement
+        if payment.payment_type == 'inscription':
+            user = request.user
+            user.is_paid = True
+            user.is_activ= True
+            user.save()
+
+            # Calculer et distribuer les commissions
+            sponsorship = user.sponsored_by.first()
+            if sponsorship:
+                sponsor = sponsorship.sponsor
+                commission = payment.amount * (sponsorship.commission_percentage / 100)
+                sponsor.wallet_balance += commission
+                sponsor.save()
+
+        return Response({'status': 'payment confirmed'})
+on confirme le paiement et on active le compte de l'utilisateur , mais le probleme est que je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou recoive les donnees de paiement et les envoie au backend pour que le backend puisse activer le compte de l'utilisateur , je suis un peu perdu , je ne sais pas comment faire pour que la vue payment thankyou r
+
+
+voila par xemple comment s'utilise l'api de moneeroo :
+POST /v1/payments/initialize
+Host: https://api.moneroo.io
+Authorization: Bearer YOUR_SECRET_KEY
+Content-Type: application/json
+Accept: application/json
+{
+    "amount": 100,
+    "currency": "USD",
+    "description": "Payment for order #123",
+    "customer": {
+        "email": "john@example.com",
+        "first_name": "John",
+        "last_name": "Doe"
+    },
+    "return_url": "https://example.com/payments/thank-you"
+    "metadata": {
+        "order_id": "123",
+        "customer_id": "123"
+    },
+    "methods": ["mtn_bj", "moov_bj"] # Once again, it is not required
+}
+Example response :
+Copy
+{
+  "message": "Transaction initialized successfully",
+  "data": {
+    "id": "5f7b1b2c",
+    "checkout_url": "https://checkout.moneroo.io/5f7b1b2c"
+  }
+}
+
+const axios = require('axios');
+
+const data = {
+    "amount": 100,
+    "currency": "USD",
+    "description": "Payment for order #123",
+    "customer": {
+        "email": "john@example.com",
+        "first_name": "John",
+        "last_name": "Doe"
+    },
+    "return_url": "https://example.com/payments/thank-you",
+    "metadata": {
+        "order_id": "123",
+        "customer_id": "123",
+    },
+    "methods": ["qr_ngn", "bank_transfer_ngn"]
+};
+
+const options = {
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer YOUR_SECRET_KEY'
+    'Accept': 'application/json'
+  }
+};
+
+axios.post('https://api.moneroo.io/v1/payments/initialize', data, options)
+    .then((response) => {
+        if (response.status !== 201) {
+            throw new Error(`Request failed with status ${response.status}`);
+
+
+ }
+        console.log(`Redirect to: ${response.data.checkout_url}`);
+    })
+    .catch((error) => {
+        console.error(error);
+    });
+
+
+maintenant ici c'est pour utiliser l'api de money fusion :
+Web API: he flexible way to develop
+You can use the web api to develop your app.
+
+To get started I will use axios. Feel free to use any http client you want. e.g. fetch
+
+#Make Payment Request
+const axios = require("axios");
+
+const apiUrl = "YOUR_API_URL"; // Get this from your dashboard
+const makePayment = async (paymentData) => {
+  try {
+    const response = await axios.post(apiUrl, paymentData, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const paymentData = {
+  totalPrice: 200,
+  article: [
+    {
+      sac: 100,
+      chaussure: 100,
+    },
+  ],
+  personal_Info: [
+    {
+      userId: 1,
+      orderId: 123,
+    },
+  ],
+  numeroSend: "01010101",
+  nomclient: "John Doe",
+  return_url: "https://your-domain.com/callback",
+};
+Example Response
+
+{
+  "statut": true,
+  "token": "5d58823b084564",
+  "message": "paiement en cours",
+  "url": "https://www.pay.moneyfusion.net/pay/6596aded36bd58823b084564"
+}
+
+Check Payment Status
+javascript
+const checkPaymentStatus = async (token) => {
+  try {
+    const response = await axios.get(
+      `https://www.pay.moneyfusion.net/paiementNotif/${token}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+#Example Response
+json
+{
+  "statut": true,
+  "data": {
+    "_id": "65df163b11ab882694573060",
+    "tokenPay": "0d1d8bc9b6d2819c",
+    "numeroSend": "01010101",
+    "nomclient": "John Doe",
+    "personal_Info": [
+      {
+        "userId": 1,
+        "orderId": 123
+      }
+    ],
+    "numeroTransaction": "0708889205",
+    "Montant": 200,
+    "frais": 5,
+    "statut": "paid",
+    "moyen": "orange",
+    "return_url": "https://your-domain.com/callback",
+    "createdAt": "2024-02-28T11:17:15.285Z"
+  },
+  "message": "details paiement"
+}
+#Payment Status Types
+Status	Description
+pending	Payment is being processed
+failure	Payment failed
+no paid	Payment not completed
+paid	Payment successful

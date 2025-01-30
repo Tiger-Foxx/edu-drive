@@ -12,6 +12,8 @@ import SignupPage from "./pages/SignupPage/SignupPage.jsx";
 import LoginPage from "./pages/SigninPage/LoginPage.jsx";
 import AboutPage from "./pages/AboutPage/AboutPage.jsx";
 import LegalPage from "./pages/Privacy/Privacy.jsx";
+import PayementTankYouPage from "@/pages/Payment/PayementTankYouPage.jsx";
+import ProtectedRoute from "@/protectedRoutes.jsx";
 
 
 function App() {
@@ -22,25 +24,35 @@ function App() {
 
     return (
         <div className="app">
-            <Navbar />
+            <Navbar/>
             <Routes>
-                <Route path="/dashboard" element={<UserSpace />}>
-                    <Route path="profile" element={<ProfileSection />} />
-                    <Route path="referral" element={<ReferralSection />} />
-                    <Route path="help" element={<HelpSection />} />
+                <Route path="/" element={<HomePage/>}/>
+                <Route path="/signup" element={<SignupPage/>}/>
+                <Route path="/signup/:referralCode" element={<SignupPage/>}/> {/* Nouvelle route */}
 
+                <Route path="/signin" element={<LoginPage/>}/>
+                <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/courses" element={<CoursesPage/>}/>
+                <Route path="/courses-detail/:id" element={<CourseDetailPage/>}/>
+                <Route path="/about" element={<AboutPage/>}/>
+                <Route path="/privacy" element={<LegalPage/>}/>
+                <Route path="/payment/thank-you" element={<PayementTankYouPage/>}/>
+
+                {/* Routes protégées */}
+                <Route
+                    path="/dashboard/*"
+                    element={
+                        <ProtectedRoute>
+                            <UserSpace/>
+                        </ProtectedRoute>
+                    }
+                >
+                    <Route path="profile" element={<ProfileSection/>}/>
+                    <Route path="referral" element={<ReferralSection/>}/>
+                    <Route path="help" element={<HelpSection/>}/>
                 </Route>
-                <Route path="/" element={<HomePage/>} />
-                <Route path="/signup" element={<SignupPage />} />
-                <Route path="/signin" element={<LoginPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/courses" element={<CoursesPage />} />
-                <Route path="/courses-detail" element={<CourseDetailPage/>} />
-                <Route path="/about" element={<AboutPage/>} />
-                <Route path="/privacy" element={<LegalPage/>} />
-
             </Routes>
-            {showFooter && <Footer />}
+            {showFooter && <Footer/>}
         </div>
     );
 }
@@ -49,7 +61,7 @@ function App() {
 function Root() {
     return (
         <BrowserRouter>
-            <App />
+            <App/>
         </BrowserRouter>
     );
 }
