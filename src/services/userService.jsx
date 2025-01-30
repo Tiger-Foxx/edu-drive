@@ -15,7 +15,7 @@ export function checkUserPaid(){
     const user = getCurrentUser();
     if(user){
         const userObj = user;
-        return userObj.is_paid;
+        return !userObj.is_paid;
     }
-    return false;
+    return !false;
 }

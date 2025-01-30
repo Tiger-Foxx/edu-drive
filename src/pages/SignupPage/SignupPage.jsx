@@ -1,4 +1,4 @@
-import  {useRef, useState} from 'react';
+import {useEffect, useRef, useState} from 'react';
 import { Shield, Gift, CheckCircle, AlertCircle, ChevronRight, UserPlus, CreditCard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import './SignupPage.css';
@@ -6,6 +6,7 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import {SERVER_BASE_URL} from "@/Config.jsx";
 import { ToastContainer, toast } from 'react-toastify';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -25,14 +26,29 @@ const SignupPage = () => {
     const [active, setActive] = useState(true);
     const [PayActive, setPayActive] = useState(true)
     const [errors, setErrors] = useState({});
-
+    const { referralCode } = useParams(); // Récupère le code de parrainage depuis l'URL
+    const {disabledCode,setDisabledCode}=useState(false);
+    let disabled=false;
+    // Effet pour remplir automatiquement le code de parrainage depuis l'URL
+    useEffect(() => {
+        if (referralCode) {
+            disabled=true;
+            setFormData(prev => ({
+                ...prev,
+                referralCode: referralCode
+            }));
+        }
+    }, [referralCode]);
     const handleChange = (e) => {
         const { name, value } = e.target;
+        // Ne permet pas la modification du code de parrainage s'il vient de l'URL
+        if (name === 'referralCode' && referralCode) {
+            return;
+        }
         setFormData(prev => ({
             ...prev,
             [name]: value
         }));
-        // Clear error when user types
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -407,7 +423,7 @@ const SignupPage = () => {
                                                     value={formData.referralCode}
                                                     onChange={handleChange}
                                                     className={`w-full px-4 py-3 rounded-xl border ${errors.referralCode ? 'border-red-500' : 'border-gray-300'} 
-                                                    focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
+                                                    focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 disabled:bg-gray-50 disabled:cursor-not-allowed`}
                                                     placeholder="Code de parrainage requis"
                                                 />
                                                 {errors.referralCode && (

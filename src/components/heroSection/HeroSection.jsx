@@ -20,9 +20,6 @@ const HeroSection = () => {
             loop: true,
             showCursor: true,
             cursorChar: '|',
-
-
-
         });
 
         // Initialize particles.js

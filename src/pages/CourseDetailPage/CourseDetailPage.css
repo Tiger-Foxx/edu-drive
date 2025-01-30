@@ -83,3 +83,14 @@ a:hover, button:hover {
 ::-webkit-scrollbar-thumb:hover {
     background: #1d4ed8;
 }
+
+#youtube-video{
+    min-height: 400px;
+}
+
+@media screen and (max-width:500px) {
+    #youtube-video{
+        min-height: 250px;
+    }
+    
+}

@@ -28,6 +28,8 @@ function App() {
             <Routes>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
+                <Route path="/signup/:referralCode" element={<SignupPage/>}/> {/* Nouvelle route */}
+
                 <Route path="/signin" element={<LoginPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/courses" element={<CoursesPage/>}/>
