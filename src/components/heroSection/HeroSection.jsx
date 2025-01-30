@@ -15,11 +15,12 @@ const HeroSection = () => {
         const typed = new Typed(typedRef.current, {
             strings: ['Marketing digital', 'Trading', 'Développement', 'Business'],
             typeSpeed: 50,
-            backSpeed: 50,
+            backSpeed: 35,
             backDelay: 2000,
             loop: true,
             showCursor: true,
             cursorChar: '|',
+
 
 
         });

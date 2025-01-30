@@ -4,74 +4,39 @@ import { ChevronLeft, ChevronRight, Star, Users, Clock, Send } from 'lucide-reac
 import './CoursesSection.css';
 import {useNavigate} from "react-router-dom";
 import {checkUserPaid} from "@/services/userService.jsx";
+import {formationService} from "@/services/formationService.js";
 
 const CoursesSection = () => {
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [currentSlide, setCurrentSlide] = useState(0);
-    const [slidesToShow, setSlidesToShow] = useState(3); // Par défaut, 3 cartes visibles
+    const [slidesToShow, setSlidesToShow] = useState(3);
     const slideRef = useRef(null);
+    const navigate = useNavigate();
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                setLoading(true);
+                const data = await formationService.getPopularFormations(5);
+                setCourses(data);
+                console.log("Cours : ",data);
+            } catch (err) {
+                setError('Erreur lors du chargement des formations');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchCourses();
+    }, []);
 
 
 
 
-    const courses = [
-        {
-            title: "Marketing Digital Avancé",
-            description: "Maîtrisez les stratégies marketing modernes et développez votre présence en ligne",
-            rating: 4.8,
-            students: 1234,
-            duration: "12h",
-            image: "course1.jpg",
-            category: "Marketing"
-        },
-        {
-            title: "Développement Web Full-Stack",
-            description: "De débutant à expert : Apprenez le développement web moderne de A à Z",
-            rating: 4.9,
-            students: 2156,
-            duration: "30h",
-            image: "course1.jpg",
-            category: "Programmation"
-        },
-        {
-            title: "Finance & Investissement",
-            description: "Comprendre les marchés financiers et les stratégies d'investissement",
-            rating: 4.7,
-            students: 987,
-            duration: "15h",
-            image: "course1.jpg",
-            category: "Finance"
-        },
-        {
-            title: "Design UI/UX Professionnel",
-            description: "Créez des interfaces utilisateur modernes et intuitives",
-            rating: 4.9,
-            students: 1567,
-            duration: "20h",
-            image: "course1.jpg",
-            category: "Design"
-        },
-        {
-            title: "Intelligence Artificielle & ML",
-            description: "Plongez dans le monde de l'IA et du Machine Learning",
-            rating: 4.8,
-            students: 1890,
-            duration: "25h",
-            image: "course1.jpg",
-            category: "Tech"
-        }
-    ];
 
-    // const nextSlide = () => {
-    //     setCurrentSlide((prev) =>
-    //         prev === courses.length - 3 ? 0 : prev + 1
-    //     );
-    // };
-    //
-    // const prevSlide = () => {
-    //     setCurrentSlide((prev) =>
-    //         prev === 0 ? courses.length - 3 : prev - 1
-    //     );
-    // };
+
+
 
     // Mise à jour du nombre de cartes visibles selon la taille de l'écran
     useEffect(() => {
@@ -113,7 +78,32 @@ const CoursesSection = () => {
             slideElement.style.transform = `translateX(-${currentSlide * translatePercentage}%)`;
         }
     }, [currentSlide, slidesToShow]);
-    const navigate = useNavigate();
+
+    if (loading)
+        return (
+            <div className="mb-10 flex items-center justify-center h-40">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500"></div>
+            </div>
+        );
+
+    if (error)
+        return (
+            <div className="mb-10 flex flex-col items-center justify-center p-6 bg-red-100 text-red-600 rounded-lg shadow-md max-w-md mx-auto">
+                <span className="text-xl font-semibold">❌ Erreur</span>
+                <p className="mt-2 text-center">{error}</p>
+            </div>
+        );
+
+    if (courses.length === 0)
+        return (
+            <div className="mb-10 flex flex-col items-center justify-center p-6 bg-blue-50 text-blue-700 rounded-lg shadow-md max-w-md mx-auto">
+                <span className="text-2xl font-semibold">📚 Oups !</span>
+                <p className="mt-2 text-center">
+                    Aucune formation disponible pour le moment. Revenez bientôt ! 🚀
+                </p>
+            </div>
+        );
+
     return (
         <section className="courses-section">
             <div className="courses-container">
@@ -143,31 +133,17 @@ const CoursesSection = () => {
                     </div>
                 </div>
 
+
                 <div className="carousel-container">
-                    <div
-                        className="carousel-track"
-                        ref={slideRef}
-                        style={{
-                            display: 'flex',
-                            gap: '1rem',
-                            transition: 'transform 0.5s ease',
-                        }}
-                    >
+                    <div className="carousel-track" ref={slideRef}>
                         {courses.map((course, index) => (
-                            <div
-                                key={index}
-                                className="course-card"
-                                style={{
-                                    flex: `0 0 ${100 / slidesToShow}%`, // Largeur dynamique selon slidesToShow
-                                }}
-                            >
+                            <div key={course.id} className="course-card">
                                 <div className="card-image-container">
                                     <img
-                                        src={course.image}
+                                        src={course.thumbnail}
                                         alt={course.title}
                                         className="card-image"
                                     />
-                                    <span className="category-badge">{course.category}</span>
                                 </div>
                                 <div className="card-content">
                                     <h3 className="course-title">{course.title}</h3>
@@ -175,28 +151,29 @@ const CoursesSection = () => {
                                     <div className="course-stats">
                                         <div className="stat">
                                             <Star className="w-4 h-4 text-yellow-400"/>
-                                            <span>{course.rating}</span>
+                                            <span>{course.notation}</span>
                                         </div>
                                         <div className="stat">
                                             <Users className="w-4 h-4 text-blue-500"/>
-                                            <span>{course.students}</span>
+                                            <span>{course.participants_number}</span>
                                         </div>
                                         <div className="stat">
                                             <Clock className="w-4 h-4 text-green-500"/>
-                                            <span>{course.duration}</span>
+                                            <span>{`${course.duration}h`}</span>
                                         </div>
                                     </div>
                                 </div>
-                                <button className="enroll-button"  >
-                                    <a href='/courses-detail'>
-                                        S&#39;inscrire maintenant
-                                    </a>
-
+                                <button
+                                    className="enroll-button"
+                                    onClick={() => navigate(`/courses-detail/${course.id}`)}
+                                >
+                                    S&#39;inscrire maintenant
                                 </button>
                             </div>
                         ))}
                     </div>
                 </div>
+
             </div>
 
 

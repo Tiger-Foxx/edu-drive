@@ -24,8 +24,8 @@ const Navbar = () => {
             icon: <BookOpen className="w-4 h-4" />,
             submenu: [
                 { label: 'Catalogue', path: '/courses' },
-                { label: 'Nouveautés', path: '/new-courses' },
-                { label: 'Les plus populaires', path: '/popular-courses' }
+                { label: 'Nouveautés', path: '/courses' },
+                { label: 'Les plus populaires', path: '/courses' }
             ]
         },
         {
