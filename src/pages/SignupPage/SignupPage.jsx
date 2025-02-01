@@ -91,7 +91,7 @@ const SignupPage = () => {
                         user_id: formData.userId,
                         payment_type: "inscription",
                     },
-                    methods:['orange_cm','mtn_cm']
+                    // methods:['orange_cm','mtn_cm']
                 };
 
                 const response = await axios.post(
@@ -100,7 +100,7 @@ const SignupPage = () => {
                     {
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer pvk_sandbox_hwuyx8|01JJWG8CNDJE5QW4F3FXN9G8HQ`,
+                            Authorization: `Bearer pvk_8awc1r|01JK14Z0J9414GMNRJZF7F7ZEQ`,
                             Accept: "application/json",
                         },
                     }
