@@ -44,7 +44,7 @@ const Footer = () => {
                     <div>
                         <h3 className="text-gray-900 font-semibold text-lg mb-6">Navigation</h3>
                         <ul className="space-y-4">
-                            {['Accueil', 'À propos', 'Formations', 'Blog', 'Contact'].map((item) => (
+                            {['Accueil', 'About', 'Courses'].map((item) => (
                                 <li key={item}>
                                     <Link
                                         to={`/${item.toLowerCase()}`}
@@ -87,9 +87,9 @@ const Footer = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="mailto:contact@example.com" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 flex items-center">
+                                <a href="mailto:formatplusx@gmail.com" className="text-gray-600 hover:text-blue-600 transition-colors duration-200 flex items-center">
                                     <Mail size={20} className="mr-3 text-blue-600" />
-                                    contact@example.com
+                                    formatplusx@gmail.com
                                 </a>
                             </li>
                             <li className="flex items-start">

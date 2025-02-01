@@ -14,6 +14,7 @@ import AboutPage from "./pages/AboutPage/AboutPage.jsx";
 import LegalPage from "./pages/Privacy/Privacy.jsx";
 import PayementTankYouPage from "@/pages/Payment/PayementTankYouPage.jsx";
 import ProtectedRoute from "@/protectedRoutes.jsx";
+import TelegramSubscription from "@/pages/Telegram/TelegramSubscribe.jsx";
 
 
 function App() {
@@ -21,10 +22,10 @@ function App() {
 
     // Déterminer si le Footer doit s'afficher
     const showFooter = !location.pathname.includes('/dashboard');
-
+    const showNavbar = !location.pathname.includes('/privacy');
     return (
         <div className="app">
-            <Navbar/>
+            {showNavbar && <Navbar/>}
             <Routes>
                 <Route path="/" element={<HomePage/>}/>
                 <Route path="/signup" element={<SignupPage/>}/>
@@ -32,6 +33,8 @@ function App() {
 
                 <Route path="/signin" element={<LoginPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
+                <Route path="/telegram-subscribe" element={<TelegramSubscription/>}/>
+                <Route path="/telegram" element={<TelegramSubscription/>}/>
                 <Route path="/courses" element={<CoursesPage/>}/>
                 <Route path="/courses-detail/:id" element={<CourseDetailPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>

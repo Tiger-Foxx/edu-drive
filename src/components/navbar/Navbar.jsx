@@ -123,7 +123,7 @@ const Navbar = () => {
                             </ul>
 
                             <div className="flex items-center gap-3">
-                                {checkUserPaid() && <Link
+                                {!checkUserPaid() && <Link
                                     to="/login"
                                     className="px-4 py-2 text-sm font-medium text-gray-700
                                               hover:text-blue-600 transition-colors"
