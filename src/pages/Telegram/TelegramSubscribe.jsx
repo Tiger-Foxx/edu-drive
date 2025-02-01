@@ -56,7 +56,7 @@ const TelegramSubscription = () => {
                         user_id: currentUser.id,
                         payment_type: "telegram_subscription",
                     },
-                    methods: ['orange_cm', 'mtn_cm']
+                    // methods: ['orange_cm', 'mtn_cm']
                 };
                 console.log("Donnees de paiement : ,", paymentData);
                 const response = await axios.post(
@@ -65,7 +65,7 @@ const TelegramSubscription = () => {
                     {
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer pvk_sandbox_hwuyx8|01JJWG8CNDJE5QW4F3FXN9G8HQ`,
+                            Authorization: `Bearer pvk_8awc1r|01JK14Z0J9414GMNRJZF7F7ZEQ`,
                             Accept: "application/json",
                         },
                     }
