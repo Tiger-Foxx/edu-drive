@@ -14,6 +14,10 @@ const CoursesSection = () => {
     const [slidesToShow, setSlidesToShow] = useState(3);
     const slideRef = useRef(null);
     const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate('/telegram-subscribe');
+    };
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -203,7 +207,7 @@ const CoursesSection = () => {
                                     <span>Networking</span>
                                 </div>
                             </div>
-                            <button className="telegram-button">
+                            <button className="telegram-button" onClick={handleClick}>
                                 <Send className="w-5 h-5"/>
                                 Rejoindre pour 10 000 XAF
                             </button>

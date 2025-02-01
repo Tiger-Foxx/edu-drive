@@ -78,8 +78,8 @@ const SignupPage = () => {
             if (formData.currency === 'XAF') {
                 // Logique Moneroo
                 const paymentData = {
-                    amount: 50,
-                    currency: 'XAF',
+                    amount: 100,
+                    currency: "XAF",
                     description: "Paiement pour l'inscription",
                     customer: {
                         email: formData.email,
@@ -91,6 +91,7 @@ const SignupPage = () => {
                         user_id: formData.userId,
                         payment_type: "inscription",
                     },
+                    methods:['orange_cm','mtn_cm']
                 };
 
                 const response = await axios.post(
@@ -99,7 +100,7 @@ const SignupPage = () => {
                     {
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer pvk_8vyskz|01JJPRRVQA338WGDYKKZ00KE1Q`,
+                            Authorization: `Bearer pvk_sandbox_hwuyx8|01JJWG8CNDJE5QW4F3FXN9G8HQ`,
                             Accept: "application/json",
                         },
                     }
@@ -127,7 +128,7 @@ const SignupPage = () => {
             } else {
                 // Logique MoneyFusion
                 const paymentData = {
-                    totalPrice: 50, //minimum 200
+                    totalPrice: 200, //minimum 200
                     article: [{
                         inscription: 50,
                     }],
@@ -180,7 +181,7 @@ const SignupPage = () => {
                 autoClose: 2500, // Notification disparaît après 4 secondes
 
             });
-            console.error("Erreur lors de l'initialisation du paiement :", error);
+            console.error("Erreur lors de l'initialisation du paiement :", error.response.data);
         }
         setPayActive(true);
     };
@@ -220,7 +221,8 @@ const SignupPage = () => {
         if (step === 1 && validateStep1()) {
             try {
                 console.log('Donnees a envoyer ',{
-                    username: formData.name,
+                    nom: formData.name,
+                    username: formData.email,
                     email: formData.email,
                     phone_number: formData.phone,
                     password: formData.password,
@@ -228,6 +230,7 @@ const SignupPage = () => {
                 })
                 const response = await axios.post(SERVER_BASE_URL+ "/register/", {
                     nom: formData.name,
+                    username: formData.email,
                     email: formData.email,
                     phone_number: formData.phone,
                     password: formData.password,

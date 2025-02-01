@@ -396,4 +396,428 @@ Status	Description
 pending	Payment is being processed
 failure	Payment failed
 no paid	Payment not completed
-paid	Payment successful
+paid	Payment
+successful
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+actuellement je suis entrain de faire mon application de vente de formations sur google drive , et pour posseder un compte actif mes utilisateur doivent payer a l'inscription , selon ce processus  (mon application est basee sur react et django rest framework) , cela est deja fais mais maintenant il faut une nouvelle fonctionalite qui est la souscription au canal telegram :
+en fait quand l'tuilisateur va cliquer sur le bouton de souscription , on va l'envoyer vers la page de souscription au canal telegram , sur cette page il devras entrer , son numero de telephone telegram et son nom d'utilisateur telegram (optionel) , une fois cela fais , ca se passera commme a l'inscription , on va initiaer le paiement avec un montant fixe (1000 XAF)
+une fois le paiement fais , on redirige toujours vers la page paiement thankyou , ou on verifie le statut du paiement (que ce soit avec moneroo ou moneyfusion) , et comme avec l'inscription si le statut est bon , on enregistre au backend une nouvelle souscirption au canal telegram , comme ca l'admin pourra la voir.
+
+cote backend tu devras me preparer le modele de la souscription (numero , nom utilisateur telegram , nom de l'utilisateur ) , une vue pour qu'on l'enregistre apres que le front ait verif le paiment ,
+cote front une page (eeeeeextrement belle et avec un superbe design moderne ) pour souscrire au canal telegram , puis envoyer les donnees au backend!
+
+bon , je te donne les infos supplementaires :
+pour l'inscription par xemple , voiala cokent se passait l'appel pour les paiement :
+const initiatePayment = async () => {
+        console.log('Initiating payment...', formData);
+        toastId.current= toast.info("Veuillez patienter...", { position: 'top-right' , isLoading:true});
+        setPayActive(false);
+        try {
+            // Stocker les informations nécessaires dans localStorage
+            localStorage.setItem('userId', formData.userId);
+            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'moneroo' : 'moneyfusion');
+
+            if (formData.currency === 'XAF') {
+                // Logique Moneroo
+                const paymentData = {
+                    amount: 100,
+                    currency: "XAF",
+                    description: "Paiement pour l'inscription",
+                    customer: {
+                        email: formData.email,
+                        first_name: formData.name,
+                        last_name: formData.name,
+                    },
+                    return_url: `${window.location.origin}/payment/thank-you`,
+                    metadata: {
+                        user_id: formData.userId,
+                        payment_type: "inscription",
+                    },
+                    methods:['orange_cm','mtn_cm']
+                };
+
+                const response = await axios.post(
+                    "https://api.moneroo.io/v1/payments/initialize",
+                    paymentData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer pvk_sandbox_hwuyx8|01JJWG8CNDJE5QW4F3FXN9G8HQ`,
+                            Accept: "application/json",
+                        },
+                    }
+                );
+
+                if (response.status === 201) {
+                    toast.update(toastId.current, {
+                        render: "Redirection...",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2500, // Notification disparaît après 4 secondes
+
+                    });
+                    window.location.href = response.data.data.checkout_url;
+                }else{
+                    console.log('Erreur lors de l initialisation du paiement',response);
+                    toast.update(toastId.current, {
+                        render: "Erreur lors de l'initialisation du paiement",
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 4000, // Notification disparaît après 4 secondes
+
+                    });
+                }
+            } else {
+                // Logique MoneyFusion
+                const paymentData = {
+                    totalPrice: 200, //minimum 200
+                    article: [{
+                        inscription: 50,
+                    }],
+                    personal_Info: [{
+                        userId: formData.userId,
+                        orderId: Date.now(),
+                    }],
+                    numeroSend: formData.phone,
+                    nomclient: formData.name,
+                    return_url: `${window.location.origin}/payment/thank-you`
+                };
+
+                const response = await axios.post(
+                    'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
+                    paymentData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+
+                if (response.data.statut) {
+                    localStorage.setItem('paymentToken', response.data.token);
+                    toast.update(toastId.current, {
+                        render: "Redirection...",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2500, // Notification disparaît après 4 secondes
+
+                    });
+                    window.location.href = response.data.url;
+                }
+                else {
+                    console.log('Erreur lors de l initialisation du paiement : ',response);
+                    toast.update(toastId.current, {
+                        render: "Erreur lors de l'initialisation du paiement : " + response.data['message-money-fusion'].response_text_fr,
+                        type: "error",
+                        isLoading: false,
+                        autoClose: 2500, // Notification disparaît après 4 secondes
+
+                    });
+                }
+            }
+        } catch (error) {
+            toast.update(toastId.current, {
+                render: "Erreur lors de l'initialisation du paiement : " + error.message,
+                type: "error",
+                isLoading: false,
+                autoClose: 2500, // Notification disparaît après 4 secondes
+
+            });
+            console.error("Erreur lors de l'initialisation du paiement :", error.response.data);
+        }
+        setPayActive(true);
+    };
+
+
+aussi , il faut que tu saches que les infos d'un utilisateur connecte sons t dans le local storage et on l'obtions grace a une fonction que j'ai deja ecrite :
+export function getCurrentUser() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+        return user;
+    }
+    return null;
+}
+
+nom: ,
+email: ,
+phone_number: ,
+sponsor_code_input: ,
+
+
+bon , ici c'est la fameuse page de payment hank you , je pense que tu devras soit la modifier soit en faie une autre pour le telegram subscribe cette fois :
+const PaymentThankYou = () => {
+    const [status, setStatus] = useState('loading');
+    const [message, setMessage] = useState('');
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const verifyPayment = async () => {
+            try {
+                const queryParams = new URLSearchParams(window.location.search);
+                const userId = localStorage.getItem('userId');
+                const provider = localStorage.getItem('paymentProvider');
+                const paymentToken = localStorage.getItem('paymentToken');
+
+                if (!userId || !provider) {
+                    throw new Error('Informations de paiement manquantes');
+                }
+
+                let verificationData = {
+                    user_id: userId,
+                    provider: provider
+                };
+
+                // Gestion spécifique selon le provider
+                if (provider === 'moneroo') {
+                    // Pour Moneroo, on récupère directement depuis l'URL
+                    verificationData.transaction_id = queryParams.get('paymentId');
+                    verificationData.status = queryParams.get('paymentStatus');
+
+                    if (!verificationData.transaction_id || !verificationData.status) {
+                        throw new Error('Paramètres de paiement Moneroo manquants');
+                    }
+                } else if (provider === 'moneyfusion') {
+                    // Pour MoneyFusion, on fait une requête de vérification avec le token
+                    if (!paymentToken) {
+                        throw new Error('Token MoneyFusion manquant');
+                    }
+
+                    const statusResponse = await axios.get(
+                        `https://www.pay.moneyfusion.net/paiementNotif/${paymentToken}`
+                    );
+
+                    if (!statusResponse.data.data) {
+                        throw new Error('Réponse MoneyFusion invalide');
+                    }
+
+                    verificationData.transaction_id = statusResponse.data.data.numeroTransaction;
+                    verificationData.status = statusResponse.data.data.statut;
+                }
+
+                // Vérification du paiement avec le backend
+                const response = await axios.post(
+                    `${SERVER_BASE_URL}/payments/verify/`,
+                    verificationData
+                );
+
+                if (response.data.success) {
+                    setStatus('success');
+                    setMessage(response.data.message || 'Paiement confirmé avec succès !');
+
+                    // Nettoyage du localStorage
+                    localStorage.removeItem('userId');
+                    localStorage.removeItem('paymentProvider');
+                    localStorage.removeItem('paymentToken');
+                } else {
+                    throw new Error(response.data.message || 'Échec de la vérification du paiement');
+                }
+            } catch (error) {
+                console.error('Erreur de vérification:', error);
+                setStatus('error');
+                setMessage(error.message || 'Une erreur est survenue lors de la vérification du paiement');
+            }
+        };
+
+        verifyPayment();
+    }, [navigate]);
+
+    const getStatusContent = () => {
+        switch (status) {
+            case 'loading':
+                return {
+                    icon: '⌛',
+                    title: 'Vérification en cours',
+                    message: 'Veuillez patienter pendant que nous confirmons votre paiement...',
+                    buttonText: null
+                };
+            case 'success':
+                return {
+                    icon: '✅',
+                    title: 'Paiement Confirmé',
+                    message: message,
+                    buttonText: 'Aller à la connexion'
+                };
+            case 'error':
+                return {
+                    icon: '❌',
+                    title: 'Erreur de Paiement',
+                    message: message,
+                    buttonText: 'Réessayer le paiement'
+                };
+            default:
+                return {
+                    icon: '❓',
+                    title: 'État Inconnu',
+                    message: 'Une erreur inattendue est survenue',
+                    buttonText: 'Retour à l\'accueil'
+                };
+        }
+    };
+
+    const content = getStatusContent();
+
+    return (
+        <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+            <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+                <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                    <div className="text-center">
+                        <div className="text-6xl mb-4" role="img" aria-label="status icon">
+                            {content.icon}
+                        </div>
+
+                        <h2 className="text-2xl font-bold text-blue-600 mb-4">
+                            {content.title}
+                        </h2>
+
+                        <p className="text-gray-600 mb-8">
+                            {content.message}
+                        </p>
+
+                        {status === 'loading' && (
+                            <div className="flex justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            </div>
+                        )}
+
+                        {content.buttonText && (
+                            <button
+                                onClick={() => {
+                                    if (status === 'success') {
+                                        navigate('/login');
+                                    } else if (status === 'error') {
+                                        navigate('/signup');
+                                    } else {
+                                        navigate('/');
+                                    }
+                                }}
+                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                            >
+                                {content.buttonText}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default PaymentThankYou;
+
+cote backend , voila comment c'est accuillis pour l'inscription:
+class PaymentViewSet(ModelViewSet):
+    serializer_class = PaymentSerializer
+    permission_classes = [AllowAny]  # Modifié car l'utilisateur n'est pas encore authentifié
+
+    def get_queryset(self):
+        # Si l'utilisateur est authentifié, retourne ses paiements
+        if self.request.user.is_authenticated:
+            return Payment.objects.filter(user=self.request.user)
+        return Payment.objects.none()
+
+    @action(detail=False, methods=['POST'], url_path='verify')
+    def verify_payment(self, request):
+        try:
+            # Récupération des données
+            user_id = request.data.get('user_id')
+            transaction_id = request.data.get('transaction_id')
+            provider = request.data.get('provider')
+            payment_status = request.data.get('status')
+
+            if not all([user_id, transaction_id, provider, payment_status]):
+                return Response({
+                    'success': False,
+                    'message': 'Données de vérification incomplètes'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Récupération de l'utilisateur
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                return Response({
+                    'success': False,
+                    'message': 'Utilisateur non trouvé'
+                }, status=status.HTTP_404_NOT_FOUND)
+
+            # Vérification si le paiement existe déjà
+            existing_payment = Payment.objects.filter(
+                transaction_id=transaction_id,
+                user=user
+            ).first()
+
+            if existing_payment:
+                return Response({
+                    'success': False,
+                    'message': 'Ce paiement a déjà été traité'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            # Vérification du statut selon le provider
+            payment_verified = False
+            if provider == 'moneroo':
+                payment_verified = payment_status == 'completed'
+            elif provider == 'moneyfusion':
+                payment_verified = payment_status == 'paid'
+            else:
+                return Response({
+                    'success': False,
+                    'message': 'Provider de paiement non reconnu'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+            if payment_verified:
+                # Création du paiement
+                payment = Payment.objects.create(
+                    user=user,
+                    amount=1000,  # Montant fixe pour l'inscription
+                    transaction_id=transaction_id,
+                    provider=provider,
+                    status='completed'
+                )
+
+                # Activation du compte utilisateur
+                user.is_active = True
+                user.is_paid = True
+                user.save()
+
+                # Gestion des commissions de parrainage
+                sponsorship = user.sponsored_by.first()
+                if sponsorship:
+                    sponsor = sponsorship.sponsor
+                    commission = payment.amount * (sponsorship.commission_percentage / 100)
+                    sponsor.wallet_balance += commission
+                    sponsor.save()
+
+                logger.info(f"Paiement vérifié et compte activé pour l'utilisateur {user_id}")
+
+                return Response({
+                    'success': True,
+                    'message': 'Votre compte a été activé avec succès !'
+                }, status=status.HTTP_200_OK)
+            else:
+                logger.warning(f"Échec de la vérification du paiement pour l'utilisateur {user_id}")
+                return Response({
+                    'success': False,
+                    'message': 'Le paiement n\'a pas pu être vérifié'
+                }, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            logger.error(f"Erreur lors de la vérification du paiement: {str(e)}")
+            return Response({
+                'success': False,
+                'message': 'Une erreur est survenue lors de la vérification'
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+maintenant il faut faire le travail
