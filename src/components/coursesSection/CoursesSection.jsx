@@ -25,6 +25,7 @@ const CoursesSection = () => {
                 const data = await formationService.getPopularFormations(5);
                 setCourses(data);
                 console.log("Cours : ",data);
+
             } catch (err) {
                 setError('Erreur lors du chargement des formations');
             } finally {
