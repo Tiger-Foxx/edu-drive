@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronDown, Menu, X, Users, BookOpen, Gift,User2 ,SearchIcon} from 'lucide-react';
 import {checkUserPaid} from "@/services/userService.jsx";
+import logo from '../../assets/Google_Drive_logo.png';
+
 
 const Navbar = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -76,7 +78,7 @@ const Navbar = () => {
                     <div className="flex items-center justify-between h-full">
                         {/* Logo */}
                         <Link to="/" className="flex items-center gap-2">
-                            <img src="Google_Drive_logo.png" alt="Logo" className="h-8 w-8" />
+                            <img src={logo} alt="Logo" className="h-8 w-8" />
                             <span className="font-bold text-xl text-gray-900">FormatPlus</span>
                         </Link>
 
