@@ -12,6 +12,7 @@ import {
     ChevronRight
 } from 'lucide-react';
 import './UserSpace.css';
+import {logoutUser} from '../../services/userService';
 
 const UserSpace = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -103,9 +104,10 @@ const UserSpace = () => {
                         <Send className="w-5 h-5 mr-2" />
                         Canal Telegram
                     </button>
-                    <button className="action-button danger">
+                    <button className="action-button danger" >
                         <LogOut className="w-5 h-5 mr-2" />
-                        Déconnexion
+                        <a href="/signin"> Déconnexion</a>
+                       
                     </button>
                 </div>
             </aside>

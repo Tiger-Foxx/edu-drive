@@ -139,7 +139,7 @@ const Navbar = () => {
                   </li>
                 ))}
               </ul>
-
+              {!checkUserPaid() && (
               <div className="flex items-center gap-3">
                 {!checkUserPaid() && (
                   <Link
@@ -150,14 +150,15 @@ const Navbar = () => {
                     Connexion
                   </Link>
                 )}
+                {!checkUserPaid() && (
                 <Link
                   to="/signup"
                   className="px-4 py-2 text-sm font-medium text-white bg-blue-600
                                              hover:bg-blue-700 rounded-lg transition-colors"
                 >
                   S&#39;inscrire
-                </Link>
-              </div>
+                </Link>)}
+              </div>)}
             </div>
 
             {/* Mobile Menu Button */}
@@ -244,7 +245,7 @@ const Navbar = () => {
               </div>
             </div>
           ))}
-
+      {!checkUserPaid() && (
           <div className="mt-6 space-y-3">
             <Link
               to="/login"
@@ -264,7 +265,7 @@ const Navbar = () => {
             >
               S&#39;inscrire
             </Link>
-          </div>
+          </div>)}
         </div>
       </div>
     </>

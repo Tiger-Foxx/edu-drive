@@ -14,6 +14,7 @@ export function logoutUser(){
 export function checkUserPaid(){
     const user = getCurrentUser();
     if(user){
+        console.log('utilisateur present, ',user.is_paid)
         const userObj = user;
         return userObj.is_paid;
     }
