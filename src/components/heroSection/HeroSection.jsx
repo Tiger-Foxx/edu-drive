@@ -130,7 +130,7 @@ const HeroSection = () => {
                         {/* CTA buttons with enhanced hover effects */}
                         <div className="flex flex-col sm:flex-row gap-4">
                             <Link
-                                to="/signup"
+                                to={checkUserPaid()? "/courses" : "/signup"}
                                 className="group relative inline-flex items-center justify-center px-6 py-3 bg-blue-600 text-white rounded-lg font-medium transition-all duration-300 transform hover:-translate-y-0.5 hover:shadow-xl overflow-hidden"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-blue-700 opacity-0 group-hover:opacity-100 transition-opacity" />

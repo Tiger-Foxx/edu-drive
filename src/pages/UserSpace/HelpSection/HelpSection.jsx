@@ -1,18 +1,14 @@
-import  { useState } from 'react';
+import { useState } from 'react';
 import {
     Search,
     ChevronRight,
     Users,
     Wallet,
-    HelpCircle,
-    BookOpen,
-    DollarSign,
     Shield,
     AlertCircle,
     Menu,
     X
 } from 'lucide-react';
-import './HelpSection.css';
 
 const HelpSection = () => {
     const [activeSection, setActiveSection] = useState('referral-system');
@@ -199,6 +195,7 @@ const HelpSection = () => {
         }
     };
 
+    // Filtrage du contenu basé sur la recherche
     const filteredContent = Object.entries(helpSections).reduce((acc, [key, section]) => {
         const filteredArticles = section.content.filter(article =>
             article.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -210,14 +207,14 @@ const HelpSection = () => {
     }, {});
 
     return (
-        <div className="help-container min-h-screen">
-            {/* Search Bar */}
-            <div className="mb-8">
-                <div className="search-bar relative">
+        <div className="min-h-screen bg-gray-50 p-4">
+            {/* Barre de recherche fixe en haut */}
+            <div className="sticky top-0 z-40 bg-gray-50 pt-2 pb-4">
+                <div className="relative max-w-3xl mx-auto">
                     <input
                         type="text"
                         placeholder="Rechercher dans l'aide..."
-                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                     />
@@ -225,64 +222,84 @@ const HelpSection = () => {
                 </div>
             </div>
 
-            {/* Mobile Navigation Toggle */}
-            <button
-                className="lg:hidden fixed right-4 top-4 z-50 bg-blue-600 text-white p-2 rounded-lg"
-                onClick={() => setShowMobileNav(!showMobileNav)}
-            >
-                {showMobileNav ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Menu mobile et navigation */}
+            <div className="relative max-w-7xl mx-auto">
+                {/* Bouton menu mobile */}
+                <button
+                    onClick={() => setShowMobileNav(!showMobileNav)}
+                    className="fixed right-4 top-20 z-50 lg:hidden bg-blue-600 text-white p-2 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+                >
+                    {showMobileNav ? <X size={24} /> : <Menu size={24} />}
+                </button>
 
-            <div className="lg:grid lg:grid-cols-4 lg:gap-8">
-                {/* Navigation */}
-                <nav className={`help-nav lg:block ${showMobileNav ? 'block' : 'hidden'} lg:col-span-1`}>
-                    <div className="bg-white rounded-xl p-4 shadow-sm sticky top-4">
-                        {Object.entries(helpSections).map(([key, section]) => (
-                            <button
-                                key={key}
-                                onClick={() => {
-                                    setActiveSection(key);
-                                    setShowMobileNav(false);
-                                }}
-                                className={`nav-item w-full flex items-center space-x-3 px-4 py-3 rounded-lg mb-2 
-                  ${activeSection === key
-                                    ? 'bg-blue-50 text-blue-600'
-                                    : 'text-gray-600 hover:bg-gray-50'
-                                }`}
-                            >
-                                <section.icon className="w-5 h-5" />
-                                <span className="font-medium">{section.title}</span>
-                                <ChevronRight className="w-4 h-4 ml-auto" />
-                            </button>
-                        ))}
-                    </div>
-                </nav>
+                {/* Overlay mobile */}
+                {showMobileNav && (
+                    <div 
+                        className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+                        onClick={() => setShowMobileNav(false)}
+                    />
+                )}
 
-                {/* Content */}
-                <div className="lg:col-span-3">
-                    <div className="bg-white rounded-xl p-6 shadow-sm">
-                        {Object.entries(filteredContent).map(([key, section]) => (
-                            <div
-                                key={key}
-                                className={`help-content ${activeSection === key ? 'block' : 'hidden'}`}
-                            >
-                                <h2 className="help-section-title text-2xl font-bold mb-6 flex items-center">
-                                    <section.icon className="w-6 h-6 mr-3 text-blue-600" />
-                                    {section.title}
-                                </h2>
+                <div className="lg:grid lg:grid-cols-4 lg:gap-8">
+                    {/* Navigation */}
+                    <nav className={`
+                        fixed lg:relative inset-y-0 right-0 z-40 w-64 lg:w-auto
+                        transform ${showMobileNav ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0
+                        transition-transform duration-200 ease-in-out
+                        bg-white lg:bg-transparent
+                        pt-20 lg:pt-0
+                        shadow-lg lg:shadow-none
+                        lg:col-span-1
+                    `}>
+                        <div className="bg-white rounded-xl p-4 shadow-sm sticky top-24">
+                            {Object.entries(helpSections).map(([key, section]) => (
+                                <button
+                                    key={key}
+                                    onClick={() => {
+                                        setActiveSection(key);
+                                        setShowMobileNav(false);
+                                    }}
+                                    className={`
+                                        w-full flex items-center space-x-3 px-4 py-3 rounded-lg mb-2
+                                        transition-colors duration-200
+                                        ${activeSection === key
+                                            ? 'bg-blue-50 text-blue-600'
+                                            : 'text-gray-600 hover:bg-gray-50'
+                                        }
+                                    `}
+                                >
+                                    <section.icon className="w-5 h-5" />
+                                    <span className="font-medium">{section.title}</span>
+                                    <ChevronRight className="w-4 h-4 ml-auto" />
+                                </button>
+                            ))}
+                        </div>
+                    </nav>
 
-                                <div className="space-y-8">
-                                    {section.content.map((article, index) => (
-                                        <article key={index} className="article-card">
-                                            <h3 className="text-xl font-semibold mb-4">{article.title}</h3>
-                                            <div className="prose prose-blue max-w-none">
-                                                {article.content}
-                                            </div>
-                                        </article>
-                                    ))}
+                    {/* Contenu */}
+                    <div className="lg:col-span-3 mt-4 lg:mt-0">
+                        <div className="bg-white rounded-xl p-6 shadow-sm">
+                            {Object.entries(filteredContent).map(([key, section]) => (
+                                <div
+                                    key={key}
+                                    className={activeSection === key ? 'block' : 'hidden'}
+                                >
+                                    <h2 className="text-2xl font-bold mb-6 flex items-center">
+                                        <section.icon className="w-6 h-6 mr-3 text-blue-600" />
+                                        {section.title}
+                                    </h2>
+
+                                    <div className="space-y-8">
+                                        {section.content.map((article, index) => (
+                                            <article key={index} className="prose prose-blue max-w-none">
+                                                <h3 className="text-xl font-semibold mb-4">{article.title}</h3>
+                                                <div>{article.content}</div>
+                                            </article>
+                                        ))}
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

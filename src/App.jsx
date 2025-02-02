@@ -15,6 +15,7 @@ import LegalPage from "./pages/Privacy/Privacy.jsx";
 import PayementTankYouPage from "@/pages/Payment/PayementTankYouPage.jsx";
 import ProtectedRoute from "@/protectedRoutes.jsx";
 import TelegramSubscription from "@/pages/Telegram/TelegramSubscribe.jsx";
+import ReferralProgram from "./pages/ProgrammePage/ProgrammePage.jsx";
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
 
     // Déterminer si le Footer doit s'afficher
     const showFooter = !location.pathname.includes('/dashboard');
-    const showNavbar = !location.pathname.includes('/privacy');
+    const showNavbar = !location.pathname.includes('/not-nav');
     return (
         <div className="app">
             {showNavbar && <Navbar/>}
@@ -39,6 +40,7 @@ function App() {
                 <Route path="/courses-detail/:id" element={<CourseDetailPage/>}/>
                 <Route path="/about" element={<AboutPage/>}/>
                 <Route path="/privacy" element={<LegalPage/>}/>
+                <Route path="/referral" element={<ReferralProgram/>}/>
                 <Route path="/payment/thank-you" element={<PayementTankYouPage/>}/>
 
                 {/* Routes protégées */}

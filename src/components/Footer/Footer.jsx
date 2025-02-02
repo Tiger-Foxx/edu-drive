@@ -48,6 +48,7 @@ const Footer = () => {
                                 <li key={item}>
                                     <Link
                                         to={`/${item.toLowerCase()}`}
+                                        onClick={() => window.location.href = `/${item.toLowerCase()}`} 
                                         className="text-gray-600 hover:text-blue-600 transition-colors duration-200 flex items-center group"
                                     >
                                         <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mr-2" />
@@ -67,6 +68,7 @@ const Footer = () => {
                                     <Link
                                         to="/courses"
                                         className="text-gray-600 hover:text-blue-600 transition-colors duration-200 flex items-center group"
+                                        onClick={() => window.location.href = `/courses`} 
                                     >
                                         <ArrowRight size={16} className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 mr-2" />
                                         {item}
@@ -134,13 +136,13 @@ const Footer = () => {
                 <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-sm">
                     <p>© {currentYear} Fox. Tous droits réservés.</p>
                     <div className="flex space-x-6 mt-4 md:mt-0">
-                        <Link to="/privacy" className="hover:text-blue-600 transition-colors duration-200">
+                        <Link to="/privacy" onClick={() => window.location.href = '/privacy'} className="hover:text-blue-600 transition-colors duration-200">
                             Politique de confidentialité
                         </Link>
-                        <Link to="/privacy" className="hover:text-blue-600 transition-colors duration-200">
+                        <Link to="/privacy"  onClick={() => window.location.href = '/privacy'} className="hover:text-blue-600 transition-colors duration-200">
                             Conditions d&#39;utilisation
                         </Link>
-                        <Link to="/privacy" className="hover:text-blue-600 transition-colors duration-200">
+                        <Link to="/privacy" onClick={() => window.location.href = '/privacy'} className="hover:text-blue-600 transition-colors duration-200">
                             Mentions légales
                         </Link>
                     </div>
