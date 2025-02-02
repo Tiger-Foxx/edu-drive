@@ -53,11 +53,15 @@ const PaymentThankYou = () => {
                     verificationData.status = statusResponse.data.data.statut;
                 }
 
+                console.log("Donnees de verifications a envoyer au serveur : ",verificationData);
+                console.log("url du serveur : ",`${SERVER_BASE_URL}/payments/verify/`);
+
                 // Vérification du paiement avec le backend
                 const response = await axios.post(
                     `${SERVER_BASE_URL}/payments/verify/`,
                     verificationData
                 );
+
 
                 if (response.data.success) {
                     setStatus('success');
