@@ -68,7 +68,7 @@ const LoginPage = () => {
             localStorage.setItem('user', JSON.stringify(data.user));
 
             // Rediriger vers une page protégée
-            window.location.href = '/dashboard/referral';
+            window.location.href = '/courses';
         } catch (error) {
             setErrors({ submit: error.message });
         } finally {
