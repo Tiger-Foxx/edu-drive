@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import {
     Copy,
@@ -9,6 +9,7 @@ import {
     TrendingUp,
     X
 } from 'lucide-react';
+import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, toast } from 'react-toastify';
 import {SERVER_BASE_URL} from "@/Config.jsx";
 import {getCurrentUser} from "@/services/userService.jsx";
@@ -127,21 +128,41 @@ const ReferralSection = () => {
             setTimeout(() => setCopied(false), 2000);
         }
     };
+    const toastId=useRef(null);
 
     const handleWithdrawalSubmit = async (e) => {
+
         e.preventDefault();
+        toastId.current= toast.info("Veuillez patienter...", { isLoading:true});
+
         const amount = parseFloat(withdrawalAmount);
         const maxWithdrawal = userData.wallet_balance * 0.98;
 
         if (amount > maxWithdrawal) {
 
-            toast.info("Le montant demandé dépasse le maximum autorisé (98% du solde).",
-                { position: 'top-right' , isLoading:true,type:'error',autoClose:4000}
-            );
+            toast.update(toastId.current, {
+                render: "Le montant demandé dépasse le maximum autorisé (98% du solde).",
+                type: "error",
+                isLoading: false,
+                autoClose: 3500, // Notification disparaît après 4 secondes
+
+            });
             return;
         }
-
+        console.log('handleWithdrawalSubmit')
         try {
+            let refreshToken = localStorage.getItem('refresh_token');
+            // Tentative de rafraîchir le token
+            const refreshResponse = await axios.post(`${SERVER_BASE_URL}/token/refresh/`,
+                { refresh: refreshToken },  // Assure-toi que refresh est bien ici
+                { headers: { "Content-Type": "application/json" } }
+            );
+
+            const newAccessToken = refreshResponse.data.access;
+            localStorage.setItem('access_token', newAccessToken);
+
+
+
             await axios.post(
                 `${SERVER_BASE_URL}/withdrawals/`,
                 {
@@ -151,16 +172,19 @@ const ReferralSection = () => {
                 },
                 {
                     headers: {
-                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                        Authorization: `Bearer ${newAccessToken}`
                     }
                 }
             );
 
 
-            toast.info("Votre demande de retrait sera traitée dans les 6 prochaines heures. Le paiement sera effectué sur le numéro Mobile Money fourni.",
-                { position: 'top-right' , isLoading:true,type:'success',autoClose:6000}
-            );
+            toast.update(toastId.current, {
+                render: "Votre demande de retrait sera traitée dans les 6 prochaines heures. Le paiement sera effectué sur le numéro Mobile Money fourni.",
+                type:'success',
+                isLoading: false,
+                autoClose: 5000, // Notification disparaît après 4 secondes
 
+            });
 
             setShowWithdrawal(false);
             setWithdrawalAmount('');
@@ -169,9 +193,15 @@ const ReferralSection = () => {
             fetchUserData(); // Rafraîchir les données
         } catch (error) {
 
-            toast.info("Une erreur est survenue lors de la demande de retrait.",
-                { position: 'top-right' , isLoading:true,type:'error',autoClose:4000}
-            );
+
+
+            toast.update(toastId.current, {
+                render: "Une erreur est survenue lors de la demande de retrait.",
+                type:'error',
+                isLoading: false,
+                autoClose: 3000, // Notification disparaît après 4 secondes
+
+            });
         }
     };
 
@@ -335,6 +365,7 @@ const ReferralSection = () => {
                             </div>
                             <button
                                 type="submit"
+                                onClick={handleWithdrawalSubmit}
                                 className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
                             >
                                 Confirmer le retrait

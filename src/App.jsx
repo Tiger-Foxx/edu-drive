@@ -42,7 +42,7 @@ function App() {
                 <Route path="/privacy" element={<LegalPage/>}/>
                 <Route path="/referral" element={<ReferralProgram/>}/>
                 <Route path="/payment/thank-you" element={<PayementTankYouPage/>}/>
-
+                <Route path="/dashboard/help" element={<HelpSection/>}/>
                 {/* Routes protégées */}
                 <Route
                     path="/dashboard/*"
@@ -54,7 +54,7 @@ function App() {
                 >
                     <Route path="profile" element={<ProfileSection/>}/>
                     <Route path="referral" element={<ReferralSection/>}/>
-                    <Route path="help" element={<HelpSection/>}/>
+
                 </Route>
             </Routes>
             {showFooter && <Footer/>}

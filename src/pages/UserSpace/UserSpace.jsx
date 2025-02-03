@@ -104,9 +104,9 @@ const UserSpace = () => {
                         <Send className="w-5 h-5 mr-2" />
                         Canal Telegram
                     </button>
-                    <button className="action-button danger" >
+                    <button className="action-button danger" onClick={logoutUser} >
                         <LogOut className="w-5 h-5 mr-2" />
-                        <a href="/signin"> Déconnexion</a>
+                       Déconnexion
                        
                     </button>
                 </div>
