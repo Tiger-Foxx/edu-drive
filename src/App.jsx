@@ -16,6 +16,8 @@ import PayementTankYouPage from "@/pages/Payment/PayementTankYouPage.jsx";
 import ProtectedRoute from "@/protectedRoutes.jsx";
 import TelegramSubscription from "@/pages/Telegram/TelegramSubscribe.jsx";
 import ReferralProgram from "./pages/ProgrammePage/ProgrammePage.jsx";
+import ForgotPasswordPage from "@/pages/ForgotPassword/ForgotPasswordPage.jsx";
+import PasswordResetConfirmPage from "@/pages/ForgotPassword/PasswordResetConfirmPage.jsx";
 
 
 function App() {
@@ -43,6 +45,10 @@ function App() {
                 <Route path="/referral" element={<ReferralProgram/>}/>
                 <Route path="/payment/thank-you" element={<PayementTankYouPage/>}/>
                 <Route path="/dashboard/help" element={<HelpSection/>}/>
+
+                <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>
+                <Route path="/password-reset/confirm/:uid/:token" element={<PasswordResetConfirmPage/>}/>
+
                 {/* Routes protégées */}
                 <Route
                     path="/dashboard/*"
