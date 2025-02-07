@@ -41,6 +41,7 @@ const SignupPage = () => {
     }, [referralCode]);
     const handleChange = (e) => {
         const { name, value } = e.target;
+        setActive(true)
         // Ne permet pas la modification du code de parrainage s'il vient de l'URL
         if (name === 'referralCode' && referralCode) {
             return;
@@ -240,11 +241,29 @@ const SignupPage = () => {
 
 
                 const { user, message } = response.data;
+                let is_old_user = message.includes('inscrit');
+
+                if (user.is_paid){
+                    toast.update(toastId.current, {
+                        render: "Votre compte est déjà payé , vous pouvez vous connecter",
+                        type: "warning",
+                        isLoading: false,
+                        autoClose: 6000, // Notification disparaît après 4 secondes
+                    });
+
+                    toast.info( "Si vous avez oublié votre mot de passe, vous pouvez le réinitialiser",{
+                        isLoading: false,
+                        autoClose: 12000, // Notification disparaît après 4 secondes
+                    });
+                    // window.location.href = "/login";
+                    return;
+                }
+
                 toast.update(toastId.current, {
-                    render: "Utilisateur créé avec succès ! vous allez procéder au paiement",
-                    type: "success",
+                    render: message,
+                    type: is_old_user ? "warning" : "success",
                     isLoading: false,
-                    autoClose: 4000, // Notification disparaît après 4 secondes
+                    autoClose: is_old_user ? 6000 : 4000, // Notification disparaît après 4 secondes
 
                 });
                 setStep(2); // Passer à l'étape 2
