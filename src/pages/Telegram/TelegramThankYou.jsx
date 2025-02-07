@@ -154,7 +154,7 @@ const TelegramThankYou = () => {
                         {status === 'success' && (
                             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                                 <p className="text-sm text-blue-800">
-                                    Vous recevrez bientôt un message pour rejoindre notre canal Telegram.
+                                    Vous recevrez bientôt un message pour rejoindre notre canal Telegram , et vous serez ajouté sous peu Merci !.
                                 </p>
                             </div>
                         )}

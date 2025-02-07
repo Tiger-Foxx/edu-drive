@@ -18,6 +18,7 @@ import TelegramSubscription from "@/pages/Telegram/TelegramSubscribe.jsx";
 import ReferralProgram from "./pages/ProgrammePage/ProgrammePage.jsx";
 import ForgotPasswordPage from "@/pages/ForgotPassword/ForgotPasswordPage.jsx";
 import PasswordResetConfirmPage from "@/pages/ForgotPassword/PasswordResetConfirmPage.jsx";
+import TelegramThankYou from "@/pages/Telegram/TelegramThankYou.jsx";
 
 
 function App() {
@@ -37,6 +38,8 @@ function App() {
                 <Route path="/signin" element={<LoginPage/>}/>
                 <Route path="/login" element={<LoginPage/>}/>
                 <Route path="/telegram-subscribe" element={<TelegramSubscription/>}/>
+                <Route path="/telegram-subscription" element={<TelegramSubscription/>}/>
+
                 <Route path="/telegram" element={<TelegramSubscription/>}/>
                 <Route path="/courses" element={<CoursesPage/>}/>
                 <Route path="/courses-detail/:id" element={<CourseDetailPage/>}/>
@@ -44,6 +47,8 @@ function App() {
                 <Route path="/privacy" element={<LegalPage/>}/>
                 <Route path="/referral" element={<ReferralProgram/>}/>
                 <Route path="/payment/thank-you" element={<PayementTankYouPage/>}/>
+                <Route path="/payment/telegram-thank-you" element={<TelegramThankYou/>}/>
+
                 <Route path="/dashboard/help" element={<HelpSection/>}/>
 
                 <Route path="/forgot-password" element={<ForgotPasswordPage/>}/>

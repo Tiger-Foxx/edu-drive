@@ -22,6 +22,8 @@ const TelegramSubscription = () => {
         }));
     };
 
+    const PRICE=100;
+
     const initiatePayment = async () => {
         if (!formData.telegramPhone) {
             toast.error("Le numéro de téléphone Telegram est requis");
@@ -43,7 +45,7 @@ const TelegramSubscription = () => {
             if (formData.currency === 'XAF') {
                 // Logique Moneroo
                 const paymentData = {
-                    amount: 1000,
+                    amount: PRICE,
                     currency: "XAF",
                     description: "Souscription au canal Telegram",
                     customer: {
@@ -79,7 +81,7 @@ const TelegramSubscription = () => {
             } else {
                 // Logique MoneyFusion
                 const paymentData = {
-                    totalPrice: 1000,
+                    totalPrice: PRICE,
                     article: [{
                         telegram_subscription: 1000,
                     }],
@@ -228,7 +230,7 @@ const TelegramSubscription = () => {
                                 <div className="flex items-center justify-between mb-4">
                                     <span className="text-sm text-gray-600">Montant à payer</span>
                                     <span className="text-lg font-semibold text-gray-900">
-                                        1000 {formData.currency}
+                                        {PRICE} {formData.currency}
                                     </span>
                                 </div>
 

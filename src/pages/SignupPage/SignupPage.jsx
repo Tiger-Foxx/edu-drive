@@ -65,7 +65,7 @@ const SignupPage = () => {
             currency: currency
         }));
     };
-
+    const PRICE=100;
 
     const initiatePayment = async () => {
         console.log('Initiating payment...', formData);
@@ -79,7 +79,7 @@ const SignupPage = () => {
             if (formData.currency === 'XAF') {
                 // Logique Moneroo
                 const paymentData = {
-                    amount: 100,
+                    amount: PRICE,
                     currency: "XAF",
                     description: "Paiement pour l'inscription",
                     customer: {
@@ -129,7 +129,7 @@ const SignupPage = () => {
             } else {
                 // Logique MoneyFusion
                 const paymentData = {
-                    totalPrice: 200, //minimum 200
+                    totalPrice: PRICE, //minimum 200
                     article: [{
                         inscription: 50,
                     }],
