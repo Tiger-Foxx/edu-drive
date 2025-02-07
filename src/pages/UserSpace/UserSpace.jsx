@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import {
     UserCircle,
@@ -12,12 +12,15 @@ import {
     ChevronRight
 } from 'lucide-react';
 import './UserSpace.css';
-import {logoutUser} from '../../services/userService';
+import { logoutUser } from '../../services/userService';
+import { SERVER_BASE_URL } from "@/Config.jsx";
 
 const UserSpace = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1024);
     const location = useLocation();
+    const [footerInfo, setFooterInfo] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const handleResize = () => {
@@ -29,6 +32,35 @@ const UserSpace = () => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
+
+    useEffect(() => {
+        setIsLoading(true);
+        fetch(`${SERVER_BASE_URL}/footer-info/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.length > 0) {
+                    setFooterInfo(data[0]);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching footer info:', error);
+            })
+            .finally(() => {
+                setIsLoading(false);
+            });
+    }, []);
+
+    const handleTelegramClick = () => {
+        if (footerInfo?.telegram_canal) {
+            window.open(footerInfo.telegram_canal);
+        }
+    };
+    const handleTelegramSupportClick = () => {
+        if (footerInfo?.telegram) {
+            window.open("https://te.me/" + footerInfo.telegram);
+        }
+    };
+
 
     const menuItems = [
         {
@@ -51,9 +83,12 @@ const UserSpace = () => {
         }
     ];
 
+    if (isLoading) {
+        return <div className="loading-spinner">Chargement...</div>;
+    }
+
     return (
         <div className="dashboard-container">
-            {/* Hamburger Button for Mobile */}
             {isMobile && (
                 <button
                     className="hamburger-btn"
@@ -63,20 +98,7 @@ const UserSpace = () => {
                 </button>
             )}
 
-            {/* Sidebar */}
             <aside className={`dashboard-sidebar ${!isSidebarOpen ? 'closed' : ''}`}>
-                {/*<div className="sidebar-header">*/}
-                {/*    <div className="flex items-center space-x-3">*/}
-                {/*        <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">*/}
-                {/*            <UserCircle className="w-6 h-6 text-blue-600" />*/}
-                {/*        </div>*/}
-                {/*        <div>*/}
-                {/*            <h2 className="font-semibold text-gray-900">Mon Espace</h2>*/}
-                {/*            <p className="text-sm text-gray-500">Tableau de bord</p>*/}
-                {/*        </div>*/}
-                {/*    </div>*/}
-                {/*</div>*/}
-
                 <div className="sidebar-menu">
                     {menuItems.map((item) => (
                         <Link
@@ -96,28 +118,27 @@ const UserSpace = () => {
                 </div>
 
                 <div className="bottom-actions">
-                    <button className="action-button primary">
-                        <MessageCircle className="w-5 h-5 mr-2" />
+                    {footerInfo.telegram  && <button  onClick={handleTelegramSupportClick} className="action-button primary">
+                        <MessageCircle className="w-5 h-5 mr-2"/>
                         Support Client
-                    </button>
-                    <button className="action-button secondary">
-                        <Send className="w-5 h-5 mr-2" />
-                        Canal Telegram
-                    </button>
-                    <button className="action-button danger" onClick={logoutUser} >
+                    </button>}
+                    {footerInfo?.telegram_canal && (
+                        <button onClick={handleTelegramClick} className="action-button secondary">
+                            <Send className="w-5 h-5 mr-2" />
+                            Canal Telegram
+                        </button>
+                    )}
+                    <button className="action-button danger" onClick={logoutUser}>
                         <LogOut className="w-5 h-5 mr-2" />
-                       Déconnexion
-                       
+                        Déconnexion
                     </button>
                 </div>
             </aside>
 
-            {/* Main Content */}
             <main className="dashboard-main">
                 <Outlet />
             </main>
 
-            {/* Mobile Overlay */}
             {isMobile && isSidebarOpen && (
                 <div
                     className="fixed inset-0 bg-black bg-opacity-50 z-30"

@@ -294,9 +294,9 @@ const ReferralSection = () => {
                                     </div>
                                 </div>
                                 <div className="text-right">
-                                    <div className="font-medium text-blue-600">
-                                        +{referral.amount.toLocaleString()} XAF
-                                    </div>
+                                    {/*<div className="font-medium text-blue-600">*/}
+                                    {/*    +{referral.amount.toLocaleString()} XAF*/}
+                                    {/*</div>*/}
                                     <div className="text-sm text-gray-500">
                                         {referral.level === 'direct' ? 'Filleul direct' : 'Filleul indirect'}
                                     </div>
