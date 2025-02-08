@@ -27,8 +27,15 @@ const LoginPage = () => {
         }
     };
 
+    function handleRememberMe(e) {
+        // Stocker la valeur dans le state ou localStorage selon vos besoins
+        const isChecked = e.target.checked;
+        localStorage.setItem('rememberMe', isChecked);
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
 
         const newErrors = {};
         if (!formData.email) newErrors.email = "L'email est requis.";
@@ -166,6 +173,7 @@ const LoginPage = () => {
                                     name="remember-me"
                                     type="checkbox"
                                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                                    onChange={handleRememberMe}
                                 />
                                 <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer">
                                     Se souvenir de moi
