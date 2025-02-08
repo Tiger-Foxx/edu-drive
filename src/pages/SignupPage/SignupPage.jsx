@@ -7,6 +7,8 @@ import axios from "axios";
 import {SERVER_BASE_URL} from "@/Config.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
+import { MONEY_FUSION_URL } from '@/Config.jsx';
+import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 
 
 
@@ -29,7 +31,6 @@ const SignupPage = () => {
     const { referralCode } = useParams(); // Récupère le code de parrainage depuis l'URL
     const {disabledCode,setDisabledCode}=useState(false);
     let disabled=false;
-    const YOUR_CAMPAY_API_TOKEN='YOUR_CAMPAY_API_TOKEN';
     // Effet pour remplir automatiquement le code de parrainage depuis l'URL
     useEffect(() => {
         if (referralCode) {
@@ -128,10 +129,11 @@ const SignupPage = () => {
             };
       
             const response = await axios.post(
-              'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
+              MONEY_FUSION_URL,
               paymentData,
               {
                 headers: {
+
                   "Content-Type": "application/json",
                 },
               }

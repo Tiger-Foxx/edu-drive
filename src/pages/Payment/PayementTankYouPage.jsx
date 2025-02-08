@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { SERVER_BASE_URL } from "@/Config.jsx";
+import { MONEY_FUSION_URL } from '@/Config.jsx';
+import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 
 const PaymentThankYou = () => {
   const [status, setStatus] = useState('loading');
   const [message, setMessage] = useState('');
   const navigate = useNavigate();
-  const YOUR_CAMPAY_API_TOKEN='YOUR_CAMPAY_API_TOKEN';
 
   useEffect(() => {
     const verifyPayment = async () => {

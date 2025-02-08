@@ -3,6 +3,8 @@ import { toast } from 'react-hot-toast';
 import { Send, CreditCard } from 'lucide-react';
 import axios from 'axios';
 import {getCurrentUser} from "@/services/userService.jsx";
+import { MONEY_FUSION_URL } from '@/Config.jsx';
+import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 
 const TelegramSubscription = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -13,7 +15,6 @@ const TelegramSubscription = () => {
     });
     const toastId = useRef();
     const currentUser = getCurrentUser();
-    const YOUR_CAMPAY_API_TOKEN='YOUR_CAMPAY_API_TOKEN';
 
 
     const handleInputChange = (e) => {
@@ -98,7 +99,7 @@ const TelegramSubscription = () => {
                 
                 console.log("Données de paiement : ", paymentData);
                 const response = await axios.post(
-                    'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
+                    MONEY_FUSION_URL,
                     paymentData,
                     {
                         headers: {
