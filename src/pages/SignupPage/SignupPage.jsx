@@ -29,6 +29,7 @@ const SignupPage = () => {
     const { referralCode } = useParams(); // Récupère le code de parrainage depuis l'URL
     const {disabledCode,setDisabledCode}=useState(false);
     let disabled=false;
+    const YOUR_CAMPAY_API_TOKEN='YOUR_CAMPAY_API_TOKEN';
     // Effet pour remplir automatiquement le code de parrainage depuis l'URL
     useEffect(() => {
         if (referralCode) {
@@ -69,124 +70,97 @@ const SignupPage = () => {
 
     const initiatePayment = async () => {
         console.log('Initiating payment...', formData);
-        toastId.current= toast.info("Veuillez patienter...", { position: 'top-right' , isLoading:true});
+        toastId.current = toast.info("Veuillez patienter...", { position: 'top-right', isLoading: true });
         setPayActive(false);
+      
         try {
-            // Stocker les informations nécessaires dans localStorage
-            localStorage.setItem('userId', formData.userId);
-            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'moneroo' : 'moneyfusion');
+          // Stockage des informations utilisateur
+          localStorage.setItem('userId', formData.userId);
+          localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'campay' : 'moneyfusion');
+      
+          if (formData.currency === 'XAF') {
+            // Nouvelle logique Campay
+            const paymentData = {
+              amount: PRICE.toString(),
+              currency: "XAF",
+              description: "Paiement pour l'inscription",
+              external_reference: `inscription_${formData.userId}_${Date.now()}`,
+              redirect_url: `${window.location.origin}/payment/thank-you`,
+              failure_redirect_url: `${window.location.origin}/payment/thank-you`,
+              payment_options: ["MOMO","OM"]
+            };
+      
+            const response = await axios.post(
+              "https://demo.campay.net/api/get_payment_link/",
+              paymentData,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
+                },
+              }
+            );
 
-            if (formData.currency === 'XAF') {
-                // Logique Moneroo
-                const paymentData = {
-                    amount: PRICE,
-                    currency: "XAF",
-                    description: "Paiement pour l'inscription",
-                    customer: {
-                        email: formData.email,
-                        first_name: formData.name,
-                        last_name: formData.name,
-                    },
-                    return_url: `${window.location.origin}/payment/thank-you`,
-                    metadata: {
-                        user_id: formData.userId,
-                        payment_type: "inscription",
-                    },
-                    // methods:['orange_cm','mtn_cm']
-                };
-
-                const response = await axios.post(
-                    "https://api.moneroo.io/v1/payments/initialize",
-                    paymentData,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer pvk_8awc1r|01JK14Z0J9414GMNRJZF7F7ZEQ`,
-                            Accept: "application/json",
-                        },
-                    }
-                );
-
-                if (response.status === 201) {
-                    toast.update(toastId.current, {
-                        render: "Redirection...",
-                        type: "success",
-                        isLoading: false,
-                        autoClose: 2500, // Notification disparaît après 4 secondes
-
-                    });
-                    window.location.href = response.data.data.checkout_url;
-                }else{
-                    console.log('Erreur lors de l initialisation du paiement',response);
-                    toast.update(toastId.current, {
-                        render: "Erreur lors de l'initialisation du paiement",
-                        type: "error",
-                        isLoading: false,
-                        autoClose: 4000, // Notification disparaît après 4 secondes
-
-                    });
-                }
-            } else {
-                // Logique MoneyFusion
-                const paymentData = {
-                    totalPrice: PRICE, //minimum 200
-                    article: [{
-                        inscription: 50,
-                    }],
-                    personal_Info: [{
-                        userId: formData.userId,
-                        orderId: Date.now(),
-                    }],
-                    numeroSend: formData.phone,
-                    nomclient: formData.name,
-                    return_url: `${window.location.origin}/payment/thank-you`
-                };
-
-                const response = await axios.post(
-                    'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
-                    paymentData,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                    }
-                );
-
-                if (response.data.statut) {
-                    localStorage.setItem('paymentToken', response.data.token);
-                    toast.update(toastId.current, {
-                        render: "Redirection...",
-                        type: "success",
-                        isLoading: false,
-                        autoClose: 2500, // Notification disparaît après 4 secondes
-
-                    });
-                    window.location.href = response.data.url;
-                }
-                else {
-                    console.log('Erreur lors de l initialisation du paiement : ',response);
-                    toast.update(toastId.current, {
-                        render: "Erreur lors de l'initialisation du paiement : " + response.data['message-money-fusion'].response_text_fr,
-                        type: "error",
-                        isLoading: false,
-                        autoClose: 2500, // Notification disparaît après 4 secondes
-
-                    });
-                }
-            }
-        } catch (error) {
-            toast.update(toastId.current, {
-                render: "Erreur lors de l'initialisation du paiement : " + error.message,
-                type: "error",
+      
+            if (response.data.link) {
+              toast.update(toastId.current, {
+                render: "Redirection vers Campay...",
+                type: "success",
                 isLoading: false,
-                autoClose: 2500, // Notification disparaît après 4 secondes
-
-            });
-            console.error("Erreur lors de l'initialisation du paiement :", error.response.data);
+                autoClose: 2500,
+              });
+              window.location.href = response.data.link;
+            } else {
+              throw new Error('Pas de lien de paiement reçu');
+            }
+          } else {
+            // Ancienne logique MoneyFusion (inchangée)
+            const paymentData = {
+              totalPrice: PRICE,
+              article: [{ inscription: 50 }],
+              personal_Info: [{
+                userId: formData.userId,
+                orderId: Date.now(),
+              }],
+              numeroSend: formData.phone,
+              nomclient: formData.name,
+              return_url: `${window.location.origin}/payment/thank-you`
+            };
+      
+            const response = await axios.post(
+              'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
+              paymentData,
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+      
+            if (response.data.statut) {
+              localStorage.setItem('paymentToken', response.data.token);
+              toast.update(toastId.current, {
+                render: "Redirection vers MoneyFusion...",
+                type: "success",
+                isLoading: false,
+                autoClose: 2500,
+              });
+              window.location.href = response.data.url;
+            } else {
+              throw new Error(response.data['message-money-fusion']?.response_text_fr || "Erreur MoneyFusion");
+            }
+          }
+        } catch (error) {
+          toast.update(toastId.current, {
+            render: "Erreur : " + (error.response?.data?.error || error.message),
+            type: "error",
+            isLoading: false,
+            autoClose: 4000,
+          });
+          console.error("Erreur paiement:", error.response?.data || error);
         }
         setPayActive(true);
-    };
-
+      };
 
     const validateStep1 = () => {
         const newErrors = {};

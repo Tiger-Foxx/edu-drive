@@ -1,13 +1,14 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Send, Loader, CheckCircle, XCircle } from 'lucide-react';
 import axios from 'axios';
-import {SERVER_BASE_URL} from "@/config.js";
+import { SERVER_BASE_URL } from "@/config.js";
 
 const TelegramThankYou = () => {
     const [status, setStatus] = useState('loading');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+    const YOUR_CAMPAY_API_TOKEN='YOUR_CAMPAY_API_TOKEN';
 
     useEffect(() => {
         const verifyPayment = async () => {
@@ -30,13 +31,23 @@ const TelegramThankYou = () => {
                 };
 
                 // Gestion spécifique selon le provider
-                if (provider === 'moneroo') {
-                    verificationData.transaction_id = queryParams.get('paymentId');
-                    verificationData.status = queryParams.get('paymentStatus');
-
-                    if (!verificationData.transaction_id || !verificationData.status) {
-                        throw new Error('Paramètres de paiement Moneroo manquants');
+                if (provider === 'campay') {
+                    const reference = queryParams.get('reference');
+                    if (!reference) {
+                        throw new Error('Référence Campay manquante');
                     }
+
+                    const statusResponse = await axios.get(
+                        `https://demo.campay.net/api/transaction/${reference}/`,
+                        {
+                            headers: {
+                                Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
+                            },
+                        }
+                    );
+
+                    verificationData.transaction_id = reference;
+                    verificationData.status = (statusResponse.data.status === 'SUCCESSFUL' || statusResponse.data.status === 'PENDING') ? 'success' : 'failed';
                 } else if (provider === 'moneyfusion') {
                     if (!paymentToken) {
                         throw new Error('Token MoneyFusion manquant');
@@ -82,6 +93,7 @@ const TelegramThankYou = () => {
         verifyPayment();
     }, [navigate]);
 
+    // Le reste du composant reste inchangé...
     const getStatusContent = () => {
         switch (status) {
             case 'loading':
@@ -154,7 +166,7 @@ const TelegramThankYou = () => {
                         {status === 'success' && (
                             <div className="mt-6 p-4 bg-blue-50 rounded-lg">
                                 <p className="text-sm text-blue-800">
-                                    Vous recevrez bientôt un message pour rejoindre notre canal Telegram , et vous serez ajouté sous peu Merci !.
+                                    Vous recevrez bientôt un message pour rejoindre notre canal Telegram, et vous serez ajouté sous peu. Merci !
                                 </p>
                             </div>
                         )}

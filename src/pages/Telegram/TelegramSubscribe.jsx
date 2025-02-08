@@ -13,6 +13,8 @@ const TelegramSubscription = () => {
     });
     const toastId = useRef();
     const currentUser = getCurrentUser();
+    const YOUR_CAMPAY_API_TOKEN='YOUR_CAMPAY_API_TOKEN';
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -29,57 +31,57 @@ const TelegramSubscription = () => {
             toast.error("Le numéro de téléphone Telegram est requis");
             return;
         }
-
+    
         toastId.current = toast.loading("Initialisation du paiement...");
         setIsSubmitting(true);
-
+    
         try {
             // Store necessary information in localStorage
             localStorage.setItem('userId', currentUser.id);
-            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'moneroo' : 'moneyfusion');
+            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'campay' : 'moneyfusion');
             localStorage.setItem('telegramData', JSON.stringify({
                 phone: formData.telegramPhone,
                 username: formData.telegramUsername
             }));
-
+    
             if (formData.currency === 'XAF') {
-                // Logique Moneroo
+                // Nouvelle logique Campay
                 const paymentData = {
-                    amount: PRICE,
+                    amount: PRICE.toString(),
                     currency: "XAF",
                     description: "Souscription au canal Telegram",
-                    customer: {
-                        email: currentUser.email,
-                        first_name: currentUser.nom,
-                        last_name: currentUser.nom,
-                    },
-                    return_url: `${window.location.origin}/payment/telegram-thank-you`,
+                    external_reference: `telegram_${currentUser.id}_${Date.now()}`,
+                    redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
+                    failure_redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
+                    payment_options: ["MOMO","OM"],
                     metadata: {
                         user_id: currentUser.id,
                         payment_type: "telegram_subscription",
-                    },
-                    // methods: ['orange_cm', 'mtn_cm']
+                    }
                 };
-                console.log("Donnees de paiement : ,", paymentData);
+    
+                console.log("Données de paiement : ", paymentData);
                 const response = await axios.post(
-                    "https://api.moneroo.io/v1/payments/initialize",
+                    "https://demo.campay.net/api/get_payment_link/",
                     paymentData,
                     {
                         headers: {
                             "Content-Type": "application/json",
-                            Authorization: `Bearer pvk_8awc1r|01JK14Z0J9414GMNRJZF7F7ZEQ`,
-                            Accept: "application/json",
+                            Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
                         },
                     }
                 );
 
-                if (response.status === 201) {
+    
+                if (response.data.link) {
                     toast.dismiss(toastId.current);
                     toast.success("Redirection vers la page de paiement...");
-                    window.location.href = response.data.data.checkout_url;
+                    window.location.href = response.data.link;
+                } else {
+                    throw new Error('Pas de lien de paiement reçu');
                 }
             } else {
-                // Logique MoneyFusion
+                // Logique MoneyFusion (inchangée)
                 const paymentData = {
                     totalPrice: PRICE,
                     article: [{
@@ -93,7 +95,8 @@ const TelegramSubscription = () => {
                     nomclient: currentUser.nom,
                     return_url: `${window.location.origin}/payment/telegram-thank-you`
                 };
-                console.log("Donnes de paiement : ",paymentData)
+                
+                console.log("Données de paiement : ", paymentData);
                 const response = await axios.post(
                     'https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/',
                     paymentData,
@@ -103,7 +106,7 @@ const TelegramSubscription = () => {
                         },
                     }
                 );
-
+    
                 if (response.data.statut) {
                     localStorage.setItem('paymentToken', response.data.token);
                     toast.dismiss(toastId.current);
