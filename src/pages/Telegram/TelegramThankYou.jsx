@@ -5,11 +5,13 @@ import axios from 'axios';
 import { SERVER_BASE_URL } from "@/config.js";
 import { MONEY_FUSION_URL } from '@/Config.jsx';
 import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
+import { IS_DEMO } from '@/Config.jsx';
 
 const TelegramThankYou = () => {
     const [status, setStatus] = useState('loading');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
+    let response;
 
     useEffect(() => {
         const verifyPayment = async () => {
@@ -39,13 +41,14 @@ const TelegramThankYou = () => {
                     }
 
                     const statusResponse = await axios.get(
-                        `https://demo.campay.net/api/transaction/${reference}/`,
+                        (IS_DEMO) ? `https://demo.campay.net/api/transaction/${reference}/` : `https://campay.net/api/transaction/${reference}/`,
                         {
                             headers: {
                                 Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
                             },
                         }
                     );
+
 
                     verificationData.transaction_id = reference;
                     verificationData.status = (statusResponse.data.status === 'SUCCESSFUL' || statusResponse.data.status === 'PENDING') ? 'success' : 'failed';
@@ -74,7 +77,7 @@ const TelegramThankYou = () => {
 
                 if (response.data.success) {
                     setStatus('success');
-                    setMessage(response.data.message || 'Souscription Telegram confirmée avec succès !');
+                    setMessage(response.data.message || 'Souscription Telegram confirmée avec succès ! vous recevrez bientôt un message pour rejoindre notre canal Telegram, et vous serez ajouté sous peu. Merci !');
 
                     // Nettoyage du localStorage
                     localStorage.removeItem('userId');
@@ -85,10 +88,16 @@ const TelegramThankYou = () => {
                     throw new Error(response.data.message || 'Échec de la vérification du paiement');
                 }
             } catch (error) {
-                console.error('Erreur de vérification:', error);
-                setStatus('error');
-                setMessage(error.message || 'Une erreur est survenue lors de la vérification du paiement');
+                if (error.response.data.message.includes('déjà')) {
+                    setStatus('success');
+                    setMessage( 'Souscription Telegram confirmée avec succès ! vous recevrez bientôt un message pour rejoindre notre canal Telegram, et vous serez ajouté sous peu. Merci !');
+                } else {
+                    console.error('Erreur de vérification:', error);
+                    setStatus('error');
+                    setMessage(error.message || 'Une erreur est survenue lors de la vérification du paiement');
+                }
             }
+
         };
 
         verifyPayment();

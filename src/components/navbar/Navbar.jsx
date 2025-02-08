@@ -13,6 +13,7 @@ import {
 import { checkUserPaid, logoutUser } from "@/services/userService.jsx";
 import logo from "../../assets/Google_Drive_logo.png";
 import { SERVER_BASE_URL } from "@/Config.jsx";
+import { getCurrentUser } from './../../services/userService';
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -23,6 +24,7 @@ const Navbar = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const isUserLoggedIn = checkUserPaid();
+  const CurrentUser=getCurrentUser();
 
   const menuItemsNotLoggedIn = [
     {
@@ -74,7 +76,7 @@ const Navbar = () => {
     ...(telegramUrl ? [{
       label: "Communauté",
       icon: <Users className="w-4 h-4" />,
-      submenu: [{ label: "Canal Telegram", path: telegramUrl }],
+      submenu: [{ label: "Canal Telegram", path: (CurrentUser.telegram_group_joined) ? telegramUrl : "/telegram-subscribe" }],
     }] : []),
   ];
 

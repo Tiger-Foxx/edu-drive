@@ -5,6 +5,9 @@ import axios from 'axios';
 import {getCurrentUser} from "@/services/userService.jsx";
 import { MONEY_FUSION_URL } from '@/Config.jsx';
 import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
+import { PRICE_TELEGRAM_SUBSCRIPTION } from '@/Config.jsx';
+import { IS_DEMO } from '@/Config.jsx';
+
 
 const TelegramSubscription = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -25,7 +28,7 @@ const TelegramSubscription = () => {
         }));
     };
 
-    const PRICE=100;
+    const PRICE=PRICE_TELEGRAM_SUBSCRIPTION;
 
     const initiatePayment = async () => {
         if (!formData.telegramPhone) {
@@ -51,10 +54,10 @@ const TelegramSubscription = () => {
                     amount: PRICE.toString(),
                     currency: "XAF",
                     description: "Souscription au canal Telegram",
-                    external_reference: `telegram_${currentUser.id}_${Date.now()}`,
+                    // external_reference: `telegram_${currentUser.id}_${Date.now()}`,
                     redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
-                    failure_redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
-                    payment_options: ["MOMO","OM"],
+                    // failure_redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
+                    // payment_options: ["MOMO","OM"],
                     metadata: {
                         user_id: currentUser.id,
                         payment_type: "telegram_subscription",
@@ -63,7 +66,7 @@ const TelegramSubscription = () => {
     
                 console.log("Données de paiement : ", paymentData);
                 const response = await axios.post(
-                    "https://demo.campay.net/api/get_payment_link/",
+                    (IS_DEMO) ? "https://demo.campay.net/api/get_payment_link/" : "https://campay.net/api/get_payment_link/",
                     paymentData,
                     {
                         headers: {

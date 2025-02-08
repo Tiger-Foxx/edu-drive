@@ -9,6 +9,10 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { MONEY_FUSION_URL } from '@/Config.jsx';
 import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
+import { PRICE_FORMAT_PLUS_SUBSCRIPTION } from '@/Config.jsx';
+import { IS_DEMO } from '@/Config.jsx';
+
+
 
 
 
@@ -67,7 +71,7 @@ const SignupPage = () => {
             currency: currency
         }));
     };
-    const PRICE=100;
+    const PRICE=PRICE_FORMAT_PLUS_SUBSCRIPTION;
 
     const initiatePayment = async () => {
         console.log('Initiating payment...', formData);
@@ -85,17 +89,18 @@ const SignupPage = () => {
               amount: PRICE.toString(),
               currency: "XAF",
               description: "Paiement pour l'inscription",
-              external_reference: `inscription_${formData.userId}_${Date.now()}`,
+            //   external_reference: `inscription_${formData.userId}_${Date.now()}`,
               redirect_url: `${window.location.origin}/payment/thank-you`,
-              failure_redirect_url: `${window.location.origin}/payment/thank-you`,
-              payment_options: ["MOMO","OM"]
+            //   failure_redirect_url: `${window.location.origin}/payment/thank-you`,
+            //   payment_options: ["MOMO","OM"]
             };
       
             const response = await axios.post(
-              "https://demo.campay.net/api/get_payment_link/",
+               (IS_DEMO) ? "https://demo.campay.net/api/get_payment_link/" : "https://campay.net/api/get_payment_link/",
               paymentData,
               {
                 headers: {
+
                   "Content-Type": "application/json",
                   Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
                 },

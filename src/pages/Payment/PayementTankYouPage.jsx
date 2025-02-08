@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { SERVER_BASE_URL } from "@/Config.jsx";
-import { MONEY_FUSION_URL } from '@/Config.jsx';
 import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
+import { IS_DEMO } from '@/Config.jsx';
 
 const PaymentThankYou = () => {
   const [status, setStatus] = useState('loading');
@@ -33,14 +33,19 @@ const PaymentThankYou = () => {
           const reference = queryParams.get('reference');
           if (!reference) throw new Error('Référence Campay manquante');
 
-          const statusResponse = await axios.get(
-            `https://demo.campay.net/api/transaction/${reference}/`,
-            {
-              headers: {
-                Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
-              },
-            }
-          );
+          const statusResponse = await new Promise(resolve => {
+            setTimeout(async () => {
+              const response = await axios.get(
+                (IS_DEMO) ? `https://demo.campay.net/api/transaction/${reference}/` : `https://campay.net/api/transaction/${reference}/`,
+                {
+                  headers: {
+                    Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
+                  },
+                }
+              );
+              resolve(response);
+            }, 2000); // Délai de 2000 millisecondes (2 secondes)
+          });
 
           verificationData.transaction_id = reference;
           verificationData.status = (statusResponse.data.status === 'SUCCESSFUL' || statusResponse.data.status === 'PENDING') ? 'success' : 'failed';
@@ -68,19 +73,28 @@ const PaymentThankYou = () => {
 
         if (response.data.success) {
           setStatus('success');
-          setMessage(response.data.message || 'Paiement confirmé avec succès !');
-          
+          setMessage(response.data.message || 'OK');
+          window.location.href = '/login';
           // Nettoyage
           localStorage.removeItem('userId');
           localStorage.removeItem('paymentProvider');
           localStorage.removeItem('paymentToken');
         } else {
+          console.log(response);
           throw new Error(response.data.message);
         }
       } catch (error) {
-        setStatus('error');
-        setMessage(error.response?.data?.error || error.message);
+        if (error.response.data.message.includes('déjà')) {
+          setStatus('success');
+          setMessage( 'Paiement confirmé avec succès !');
+        } else {
+          setStatus('error');
+          // console.log(response);
+          console.log(error);
+          setMessage(error.response?.data?.error || error.message);
+        }
       }
+
     };
 
     verifyPayment();

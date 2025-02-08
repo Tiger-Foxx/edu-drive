@@ -12,7 +12,7 @@ import {
     ChevronRight
 } from 'lucide-react';
 import './UserSpace.css';
-import { logoutUser } from '../../services/userService';
+import { getCurrentUser, logoutUser } from '../../services/userService';
 import { SERVER_BASE_URL } from "@/Config.jsx";
 
 const UserSpace = () => {
@@ -52,8 +52,14 @@ const UserSpace = () => {
 
     const handleTelegramClick = () => {
         if (footerInfo?.telegram_canal) {
-            window.open(footerInfo.telegram_canal);
+            const CurrentUser=getCurrentUser();
+            if (CurrentUser.telegram_group_joined) {
+                window.open(footerInfo.telegram_canal);
+            } else {
+                window.open("/telegram-subscribe");
+            }
         }
+
     };
     const handleTelegramSupportClick = () => {
         if (footerInfo?.telegram) {
