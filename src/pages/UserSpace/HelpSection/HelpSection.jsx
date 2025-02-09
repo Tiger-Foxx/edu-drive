@@ -37,10 +37,10 @@ const HelpSection = () => {
                             </div>
 
                             <div className="bg-green-50 p-4 rounded-lg space-y-2">
-                                <h4 className="font-semibold text-green-800">Gains Indirects (10%)</h4>
+                                <h4 className="font-semibold text-green-800">Gains Indirects (15%)</h4>
                                 <p>Lorsque vos filleuls parrainent à leur tour :</p>
                                 <ul className="list-disc list-inside space-y-1 ml-4">
-                                    <li>Vous gagnez 10% sur leurs parrainages</li>
+                                    <li>Vous gagnez 15% sur leurs parrainages</li>
                                     <li>Ces gains s&#39;ajoutent automatiquement à votre solde</li>
                                     <li>Revenus passifs sur plusieurs niveaux</li>
                                 </ul>
@@ -55,8 +55,8 @@ const HelpSection = () => {
                                         <span className="font-semibold">20 000 XAF</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span>Gain sur leurs filleuls (10%)</span>
-                                        <span className="font-semibold">5 000 XAF</span>
+                                        <span>Gain sur leurs filleuls (15%)</span>
+                                        <span className="font-semibold">7 500 XAF</span>
                                     </div>
                                 </div>
                             </div>

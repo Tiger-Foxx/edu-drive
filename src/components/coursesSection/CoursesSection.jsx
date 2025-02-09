@@ -193,6 +193,8 @@ const CoursesSection = () => {
                             <p className="telegram-description">
                                 Accédez à du contenu exclusif, des conseils d&#39;experts et connectez-vous
                                 avec d&#39;autres apprenants passionnés.
+
+                                <p>🚀 Rejoignez notre canal Telegram exclusif sur les crypto-monnaies et recevez 5$ en crypto prometteuses!💰</p>
                             </p>
                             <div className="telegram-features">
                                 <div className="feature">
@@ -206,6 +208,10 @@ const CoursesSection = () => {
                                 <div className="feature">
                                     <div className="feature-icon">🤝</div>
                                     <span>Networking</span>
+                                </div>
+                                <div className="feature">
+                                    <div className="feature-icon">💰</div>
+                                    <span>5$ crypto</span>
                                 </div>
                             </div>
                             <button className="telegram-button" onClick={handleClick}>

@@ -112,7 +112,7 @@ const LegalPage = () => {
 
                             <h3 className="text-xl font-semibold text-gray-800 mt-8 mb-4">Système de Parrainage</h3>
                             <p className="text-gray-600 mb-4">
-                                Les parrains reçoivent 40% du montant payé par leurs filleuls directs et 10% pour les parrainages indirects.
+                                Les parrains reçoivent 40% du montant payé par leurs filleuls directs et 15% pour les parrainages indirects.
                                 Les retraits sont possibles à hauteur de 98% du solde disponible.
                             </p>
                         </div>

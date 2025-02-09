@@ -19,8 +19,8 @@ const ReferralProgram = () => {
         },
         {
             icon: TrendingUp,
-            title: "Gains Indirects 10%",
-            description: "Gagnez 10% sur les parrainages effectués par vos filleuls directs"
+            title: "Gains Indirects 15%",
+            description: "Gagnez 15% sur les parrainages effectués par vos filleuls directs"
         },
         {
             icon: Clock,
@@ -70,7 +70,7 @@ const ReferralProgram = () => {
             scenario: "Parrainage Indirect",
             details: [
                 { label: "Inscription sous-filleul", value: "50 000 XAF" },
-                { label: "Votre commission (10%)", value: "5 000 XAF" },
+                { label: "Votre commission (15%)", value: "7 500 XAF" },
                 { label: "Délai de paiement", value: "Instantané" }
             ]
         }
