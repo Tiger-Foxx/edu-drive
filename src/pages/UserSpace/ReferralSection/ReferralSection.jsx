@@ -14,6 +14,17 @@ import { ToastContainer, toast } from 'react-toastify';
 import {SERVER_BASE_URL} from "@/Config.jsx";
 import {getCurrentUser} from "@/services/userService.jsx";
 
+
+const countries = [
+    { name: "Cameroun", operators: ["MTN Mobile Money", "Orange Money"] },
+    { name: "Sénégal", operators: ["Vague", "Orange Money Sénégal"] },
+    { name: "Côte d'Ivoire", operators: ["Orange Money Côte d'Ivoire", "MTN MoMo Côte d'Ivoire"] },
+    { name: "Burkina Faso", operators: ["Orange Money Burkina Faso", "Moov Money Burkina Faso"] },
+    { name: "Mali", operators: ["Orange Money Mali", "Moov Money Mali"] },
+    { name: "Bénin", operators: ["MTN MoMo Bénin", "Moov Money Bénin"] },
+    { name: "Togo", operators: ["Moov Money Togo", "TMoney"] }
+];
+
 const ReferralSection = () => {
     const [showWithdrawal, setShowWithdrawal] = useState(false);
     const [copied, setCopied] = useState(false);
@@ -21,8 +32,10 @@ const ReferralSection = () => {
     const [beneficiaryName, setBeneficiaryName] = useState('');
     const [beneficiaryNumber, setBeneficiaryNumber] = useState('');
     const [loading, setLoading] = useState(true);
-    const [selectedOperator, setSelectedOperator] = useState(null);
+    const [selectedCountry, setSelectedCountry] = useState('Cameroun');
+    const [selectedOperator, setSelectedOperator] = useState('MTN Mobile Money');
     const [userData, setUserData] = useState(null);
+    const [filteredCountries, setFilteredCountries] = useState(countries);
 
     useEffect(() => {
         fetchUserData();
@@ -101,6 +114,10 @@ const ReferralSection = () => {
         }
     };
 
+    const handleCountrySearch = (searchTerm) => {
+        const filtered = countries.filter(country => country.name.toLowerCase().includes(searchTerm.toLowerCase()));
+        setFilteredCountries(filtered);
+    };
     const stats = userData ? [
         {
             label: 'Filleuls Directs',
@@ -132,6 +149,7 @@ const ReferralSection = () => {
     const toastId=useRef(null);
 
     const handleWithdrawalSubmit = async (e) => {
+        console.log('handleWithdrawalSubmit')
 
         e.preventDefault();
         toastId.current= toast.info("Veuillez patienter...", { isLoading:true});
@@ -141,6 +159,7 @@ const ReferralSection = () => {
 
         if (amount < 2500) {
 
+            alert('Le seuil minimum de retrait est de 2500 XAF')
             toast.update(toastId.current, {
                 render: "Le seuil minimum de retrait est de 2500 XAF",
                 type: "error",
@@ -166,24 +185,27 @@ const ReferralSection = () => {
 
 
 
-            await axios.post(
-                `${SERVER_BASE_URL}/withdrawals/`,
-                {
-                    amount,
-                    beneficiary_name: beneficiaryName,
-                    beneficiary_number: beneficiaryNumber,
-                    is_MTN: selectedOperator === 'MTN MOMO'
-                },
-                {
-                    headers: {
-                        Authorization: `Bearer ${newAccessToken}`
-                    }
-                }
-            );
+            const response=await axios.post(`${SERVER_BASE_URL}/withdrawals/`, {
+                amount: withdrawalAmount,
+                beneficiary_name: beneficiaryName,
+                beneficiary_number: beneficiaryNumber,
+                country: selectedCountry,
+                operator: selectedOperator
+
+            }, {
+                headers: { Authorization: `Bearer ${newAccessToken}` }
+            });
+
+            if(response.status==201){
+                alert('Votre demande de retrait sera traitée dans les  prochaines heures. Le paiement sera effectué sur le numéro Mobile Money fourni.')
+            }
+            else{
+                alert('Une erreur est survenue lors de la demande de retrait.')
+            }
 
 
             toast.update(toastId.current, {
-                render: "Votre demande de retrait sera traitée dans les 6 prochaines heures. Le paiement sera effectué sur le numéro Mobile Money fourni.",
+                render: "Votre demande de retrait sera traitée dans les  prochaines heures. Le paiement sera effectué sur le numéro Mobile Money fourni.",
                 type:'success',
                 isLoading: false,
                 autoClose: 5000, // Notification disparaît après 4 secondes
@@ -315,20 +337,44 @@ const ReferralSection = () => {
                     )}
                 </div>
             </div>
-{/* Modal de Retrait */}
-{showWithdrawal && (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full">
-            <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-blue-600">Demande de Retrait</h3>
-                <button
-                    onClick={() => setShowWithdrawal(false)}
-                    className="text-gray-400 hover:text-gray-600 transition-colors"
-                >
-                    <X className="w-5 h-5" />
-                </button>
-            </div>
-            <form onSubmit={handleWithdrawalSubmit} className="space-y-4">
+ {/* Modal de Retrait */}
+ {showWithdrawal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full">
+                        <form onSubmit={handleWithdrawalSubmit} className="space-y-4">
+                            {/* Sélection du pays */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Pays</label>
+                                {/* <input
+                                    type="text"
+                                    placeholder="Rechercher un pays..."
+                                    onChange={(e) => handleCountrySearch(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                                /> */}
+                                <select
+                                    value={selectedCountry}
+                                    onChange={(e) => setSelectedCountry(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg mt-2"
+                                >
+                                    {filteredCountries.map((country, index) => (
+                                        <option key={index} value={country.name}>{country.name}</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            {/* Sélection de l'opérateur */}
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Opérateur</label>
+                                <select
+                                    value={selectedOperator}
+                                    onChange={(e) => setSelectedOperator(e.target.value)}
+                                    className="w-full px-4 py-2 border border-gray-300 rounded-lg"
+                                >
+                                    {selectedCountry && countries.find(c => c.name === selectedCountry).operators.map((operator, index) => (
+                                        <option key={index} value={operator}>{operator}</option>
+                                    ))}
+                                </select>
+                            </div>
                 {/* Montant à retirer */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -359,6 +405,8 @@ const ReferralSection = () => {
                 </div>
 
                 {/* Choix de l'opérateur */}
+{/* 
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         Opérateur Mobile Money
@@ -387,12 +435,14 @@ const ReferralSection = () => {
                             Orange Money
                         </button>
                     </div>
-                </div>
+                </div> */}
 
                 {/* Numéro Mobile Money */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Numéro Mobile Money
+                        Numéro Mobile Money 
+                        <p className='text-xs text-gray-500'>(marquez l'indicatif du pays [Ex: +237...])</p>
+                        
                     </label>
                     <input
                         type="tel"
