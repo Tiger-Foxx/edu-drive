@@ -113,7 +113,7 @@ const PaymentThankYou = () => {
         return {
           icon: '✅',
           title: 'Paiement Confirmé',
-          message: message,
+          message: "Vous Patientez un peu après inscription et vos formations seront disponibles , contactez le service client en cas de problème",
           buttonText: 'Aller à la connexion'
         };
       case 'error':

@@ -74,7 +74,7 @@ const Navbar = () => {
       ],
     },
     ...(telegramUrl ? [{
-      label: "Communauté",
+      label: "Telegram VIP",
       icon: <Users className="w-4 h-4" />,
       submenu: [{ label: "Canal Telegram", path: (CurrentUser.telegram_group_joined) ? telegramUrl : "/telegram-subscribe" }],
     }] : []),

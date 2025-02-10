@@ -551,10 +551,9 @@ const SignupPage = () => {
                             </div>
 
                             <div className="mt-8 p-6 bg-white/10 rounded-xl backdrop-blur-lg">
-                                <h4 className="font-semibold mb-2">Garantie satisfait ou remboursé</h4>
+                                <h4 className="font-semibold mb-2">Vous Patientez après inscription et vos formations seront disponibles</h4>
                                 <p className="text-blue-100">
-                                    Nous sommes tellement confiants que vous aimerez nos formations que nous
-                                    offrons une garantie de remboursement de 30 jours.
+                                    En effet , nous vous invitons à vous connecter à votre compte après inscription , et patienter quelques temps pour que vous soyez autorisé a accéder a nos formations.
                                 </p>
                             </div>
                         </div>

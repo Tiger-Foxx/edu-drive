@@ -139,6 +139,18 @@ const ReferralSection = () => {
         const amount = parseFloat(withdrawalAmount);
         const maxWithdrawal = userData.wallet_balance * 0.98;
 
+        if (amount < 2500) {
+
+            toast.update(toastId.current, {
+                render: "Le seuil minimum de retrait est de 2500 XAF",
+                type: "error",
+                isLoading: false,
+                autoClose: 4500, // Notification disparaît après 4 secondes
+
+            });
+            return;
+        }
+
         if (amount > maxWithdrawal) {
 
             toast.update(toastId.current, {
