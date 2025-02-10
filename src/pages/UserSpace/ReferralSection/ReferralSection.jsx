@@ -151,17 +151,7 @@ const ReferralSection = () => {
             return;
         }
 
-        if (amount > maxWithdrawal) {
-
-            toast.update(toastId.current, {
-                render: "Le montant demandé dépasse le maximum autorisé (98% du solde).",
-                type: "error",
-                isLoading: false,
-                autoClose: 3500, // Notification disparaît après 4 secondes
-
-            });
-            return;
-        }
+      
         console.log('handleWithdrawalSubmit')
         try {
             let refreshToken = localStorage.getItem('refresh_token');
@@ -342,7 +332,7 @@ const ReferralSection = () => {
                 {/* Montant à retirer */}
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Montant à retirer (Max: {(userData?.wallet_balance * 0.98).toLocaleString()} XAF)
+                        Montant à retirer (Min : 2500 XAF/XOF)
                     </label>
                     <input
                         type="number"

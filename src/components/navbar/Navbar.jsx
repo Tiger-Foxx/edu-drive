@@ -9,6 +9,8 @@ import {
   User2,
   SearchIcon,
   HelpCircle,
+  Home,
+
 } from "lucide-react";
 import { checkUserPaid, logoutUser } from "@/services/userService.jsx";
 import logo from "../../assets/Google_Drive_logo.png";
@@ -27,6 +29,11 @@ const Navbar = () => {
   const CurrentUser=getCurrentUser();
 
   const menuItemsNotLoggedIn = [
+    {
+      label: "Accueil",
+      icon: <Home className="w-4 h-4" />,
+      path: "/", // Ajoutez un chemin direct pour les éléments sans sous-menu
+    },
     {
       label: "Formations",
       icon: <BookOpen className="w-4 h-4" />,
@@ -55,6 +62,11 @@ const Navbar = () => {
   ];
 
   const getMenuItemsLoggedIn = (telegramUrl) => [
+    {
+      label: "Accueil",
+      icon: <Home className="w-4 h-4" />,
+      path: "/", // Ajoutez un chemin direct pour les éléments sans sous-menu
+    },
     {
       label: "Formations",
       icon: <BookOpen className="w-4 h-4" />,
@@ -122,48 +134,64 @@ const Navbar = () => {
       ? getMenuItemsLoggedIn(footerInfo?.telegram_canal)
       : menuItemsNotLoggedIn;
 
-  const renderMenuItems = (items) => (
-      <ul className="flex items-center gap-8 mr-8">
-        {items.map((item, index) => (
-            <li
-                key={index}
-                className="relative group"
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave}
-            >
-              <button
-                  className="flex items-center gap-2 px-1 py-2 text-gray-700
-                           hover:text-blue-600 transition-colors"
-              >
-                {item.icon}
-                <span>{item.label}</span>
-                <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
-              </button>
 
-              <div
+      const renderMenuItems = (items) => (
+        <ul className="flex items-center gap-8 mr-8">
+          {items.map((item, index) => (
+            <li
+              key={index}
+              className="relative group"
+              onMouseEnter={() => item.submenu && handleMouseEnter(index)}
+              onMouseLeave={() => item.submenu && handleMouseLeave()}
+            >
+              {item.path ? (
+                <Link
+                  to={item.path}
+                  className="flex items-center gap-2 px-1 py-2 text-gray-700
+                             hover:text-blue-600 transition-colors"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                </Link>
+              ) : (
+                <button
+                  className="flex items-center gap-2 px-1 py-2 text-gray-700
+                             hover:text-blue-600 transition-colors"
+                >
+                  {item.icon}
+                  <span>{item.label}</span>
+                  <ChevronDown className="w-4 h-4 transition-transform duration-200 group-hover:rotate-180" />
+                </button>
+              )}
+      
+              {item.submenu && (
+                <div
                   className={`absolute top-full right-0 bg-white rounded-xl shadow-xl
-                            border border-gray-100 min-w-[220px] py-2 mt-2
-                            transition-all duration-200 transform
-                            ${activeSubmenu === index
-                      ? "opacity-100 translate-y-0 visible"
-                      : "opacity-0 translate-y-2 invisible"
-                  }`}
-              >
-                {item.submenu.map((subItem, subIndex) => (
+                              border border-gray-100 min-w-[220px] py-2 mt-2
+                              transition-all duration-200 transform
+                              ${activeSubmenu === index
+                                ? "opacity-100 translate-y-0 visible"
+                                : "opacity-0 translate-y-2 invisible"
+                              }`}
+                >
+                  {item.submenu.map((subItem, subIndex) => (
                     <Link
-                        key={subIndex}
-                        to={subItem.path}
-                        className="block px-4 py-2.5 text-sm text-gray-700
-                               hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                      key={subIndex}
+                      to={subItem.path}
+                      className="block px-4 py-2.5 text-sm text-gray-700
+                                 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     >
                       {subItem.label}
                     </Link>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </li>
-        ))}
-      </ul>
-  );
+          ))}
+        </ul>
+      );
+
+
 
   const renderAuthButtons = () => {
     if (isUserLoggedIn) {
@@ -200,64 +228,85 @@ const Navbar = () => {
     );
   };
 
-  const renderMobileMenu = () => (
-      <div
-          className={`fixed inset-0 z-40 xl:hidden transition-all duration-300
-                ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
-      >
-        <div
-            className="absolute inset-0 bg-black/20 backdrop-blur-sm"
-            onClick={() => setIsMenuOpen(false)}
-        />
 
-        <div
-            className={`absolute top-0 right-0 w-80 h-full bg-white shadow-2xl 
+
+  const renderMobileMenu = () => (
+    <div
+      className={`fixed inset-0 z-40 xl:hidden transition-all duration-300
+                  ${isMenuOpen ? "opacity-100 visible" : "opacity-0 invisible"}`}
+    >
+      <div
+        className="absolute inset-0 bg-black/20 backdrop-blur-sm"
+        onClick={() => setIsMenuOpen(false)}
+      />
+  
+      <div
+        className={`absolute top-0 right-0 w-80 h-full bg-white shadow-2xl 
                     py-20 px-6 transition-transform duration-300 transform
                     ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
-        >
-          {menuItems.map((item, index) => (
-              <div key={index} className="py-2">
+      >
+        {menuItems.map((item, index) => (
+          <div key={index} className="py-2">
+            {item.path ? (
+              <Link
+                to={item.path}
+                className="flex items-center justify-between w-full py-2 text-gray-700
+                           hover:text-blue-600 transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <div className="flex items-center gap-2">
+                  {item.icon}
+                  <span>{item.label}</span>
+                </div>
+              </Link>
+            ) : (
+              <>
                 <button
-                    onClick={() => setActiveSubmenu(activeSubmenu === index ? null : index)}
-                    className="flex items-center justify-between w-full py-2 text-gray-700
-                               hover:text-blue-600 transition-colors"
+                  onClick={() => setActiveSubmenu(activeSubmenu === index ? null : index)}
+                  className="flex items-center justify-between w-full py-2 text-gray-700
+                             hover:text-blue-600 transition-colors"
                 >
                   <div className="flex items-center gap-2">
                     {item.icon}
                     <span>{item.label}</span>
                   </div>
                   <ChevronDown
-                      className={`w-4 h-4 transition-transform duration-200
-                                    ${activeSubmenu === index ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 transition-transform duration-200
+                                ${activeSubmenu === index ? "rotate-180" : ""}`}
                   />
                 </button>
-
-                <div
+  
+                {item.submenu && (
+                  <div
                     className={`pl-4 space-y-1 overflow-hidden transition-all duration-200
                                 ${activeSubmenu === index
                         ? "max-h-screen opacity-100 mt-2"
                         : "max-h-0 opacity-0"
-                    }`}
-                >
-                  {item.submenu.map((subItem, subIndex) => (
+                      }`}
+                  >
+                    {item.submenu.map((subItem, subIndex) => (
                       <Link
-                          key={subIndex}
-                          to={subItem.path}
-                          className="block py-2 text-sm text-gray-600 hover:text-blue-600
-                                   transition-colors"
-                          onClick={() => setIsMenuOpen(false)}
+                        key={subIndex}
+                        to={subItem.path}
+                        className="block py-2 text-sm text-gray-600 hover:text-blue-600
+                                 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
                       >
                         {subItem.label}
                       </Link>
-                  ))}
-                </div>
-              </div>
-          ))}
-
-          {renderAuthButtons()}
-        </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        ))}
+  
+        {renderAuthButtons()}
       </div>
+    </div>
   );
+
 
   if (isLoading) {
     return <div className="h-20 bg-white" />; // Placeholder during loading

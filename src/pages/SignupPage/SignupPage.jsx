@@ -469,7 +469,6 @@ const SignupPage = () => {
                                                         <CreditCard className="w-6 h-6 mr-4 text-blue-600" />
                                                         <div>
                                                             <h3 className="font-semibold">Mobile Money (XAF)</h3>
-                                                            <p className="text-sm text-gray-600">Pour le Cameroun</p>
                                                         </div>
                                                     </div>
                                                     {formData.paymentMethod === 'mobile_money' && formData.currency === 'XAF' && (
@@ -488,7 +487,6 @@ const SignupPage = () => {
                                                         <CreditCard className="w-6 h-6 mr-4 text-blue-600" />
                                                         <div>
                                                             <h3 className="font-semibold">Mobile Money (XOF)</h3>
-                                                            <p className="text-sm text-gray-600">Pour les pays francophones</p>
                                                         </div>
                                                     </div>
                                                     {formData.paymentMethod === 'mobile_money' && formData.currency === 'XOF' && (
