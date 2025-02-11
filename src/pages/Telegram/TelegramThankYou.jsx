@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Send, Loader, CheckCircle, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { SERVER_BASE_URL } from "@/config.js";
-import { MONEY_FUSION_URL } from '@/Config.jsx';
+// import { MONEY_FUSION_URL } from '@/Config.jsx';
 import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 import { IS_DEMO } from '@/Config.jsx';
 

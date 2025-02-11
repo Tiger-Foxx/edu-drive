@@ -3,10 +3,11 @@ import { toast } from 'react-hot-toast';
 import { Send, CreditCard } from 'lucide-react';
 import axios from 'axios';
 import {getCurrentUser} from "@/services/userService.jsx";
-import { MONEY_FUSION_URL } from '@/Config.jsx';
+// import { MONEY_FUSION_URL } from '@/Config.jsx';
 import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 import { PRICE_TELEGRAM_SUBSCRIPTION } from '@/Config.jsx';
 import { IS_DEMO } from '@/Config.jsx';
+import { MONEY_FUSION_URL_TELEGRAM } from '../../config';
 
 
 const TelegramSubscription = () => {
@@ -102,7 +103,7 @@ const TelegramSubscription = () => {
                 
                 console.log("Données de paiement : ", paymentData);
                 const response = await axios.post(
-                    MONEY_FUSION_URL,
+                    MONEY_FUSION_URL_TELEGRAM,
                     paymentData,
                     {
                         headers: {
