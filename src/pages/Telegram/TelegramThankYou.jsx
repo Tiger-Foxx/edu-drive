@@ -64,6 +64,7 @@ const TelegramThankYou = () => {
                     if (!statusResponse.data.data) {
                         throw new Error('Réponse MoneyFusion invalide');
                     }
+                    console.log(statusResponse);
 
                     verificationData.transaction_id = statusResponse.data.data.numeroTransaction;
                     verificationData.status = statusResponse.data.data.statut;

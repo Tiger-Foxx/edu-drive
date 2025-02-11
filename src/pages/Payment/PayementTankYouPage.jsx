@@ -56,7 +56,7 @@ const PaymentThankYou = () => {
           const statusResponse = await axios.get(
             `https://www.pay.moneyfusion.net/paiementNotif/${paymentToken}`
           );
-
+          console.log(statusResponse);
           if (!statusResponse.data.data) {
             throw new Error('Réponse MoneyFusion invalide');
           }
