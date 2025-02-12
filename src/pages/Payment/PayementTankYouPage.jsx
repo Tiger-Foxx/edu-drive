@@ -72,6 +72,10 @@ const PaymentThankYou = () => {
           verificationData.status = statusResponse.data.data.statut;
         }
 
+        console.log("--------------------------------------------------------------------------------------");
+        console.log("Verification des données : ",verificationData);
+        console.log("--------------------------------------------------------------------------------------");
+
         // Envoi au backend
         const response = await axios.post(
           `${SERVER_BASE_URL}/payments/verify/`,
@@ -87,7 +91,9 @@ const PaymentThankYou = () => {
           localStorage.removeItem('paymentProvider');
           localStorage.removeItem('paymentToken');
         } else {
-          console.log(response);
+          console.log("--------------------------------------------------------------------------------------");
+          console.log("Erreur de paiement : ",response.data.message);
+          console.log("--------------------------------------------------------------------------------------");
           throw new Error(response.data.message);
         }
       } catch (error) {
