@@ -179,9 +179,9 @@ const SignupPage = () => {
         }
         if (!formData.phone.trim()) {
             newErrors.phone = "Le numéro de téléphone est requis";
-        } else if (!/^\d{9,}$/.test(formData.phone.replace(/\s/g, ""))) {
+        } else if (!/^\+\d{10,}$/.test(formData.phone.replace(/\s/g, ""))) {
             newErrors.phone = "Numéro de téléphone invalide";
-        }
+        }        
         if (!formData.password) {
             newErrors.password = "Le mot de passe est requis";
         } else if (formData.password.length < 6) {
@@ -359,16 +359,17 @@ const SignupPage = () => {
 
                                             <div>
                                                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                    Numéro de téléphone
+                                                    Numéro de téléphone (avec le code pays)
                                                 </label>
                                                 <input
                                                     type="tel"
                                                     name="phone"
+
                                                     value={formData.phone}
                                                     onChange={handleChange}
                                                     className={`w-full px-4 py-3 rounded-xl border ${errors.phone ? 'border-red-500' : 'border-gray-300'} 
                                                     focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200`}
-                                                    placeholder="Entrez votre numéro"
+                                                    placeholder="Ex : +237 6..."
                                                 />
                                                 {errors.phone && (
                                                     <p className="mt-1 text-sm text-red-600 flex items-center">
@@ -469,6 +470,7 @@ const SignupPage = () => {
                                                         <CreditCard className="w-6 h-6 mr-4 text-blue-600" />
                                                         <div>
                                                             <h3 className="font-semibold">Mobile Money (XAF)</h3>
+                                                            <p className="text-gray-600 text-sm">Cameroun</p>
                                                         </div>
                                                     </div>
                                                     {formData.paymentMethod === 'mobile_money' && formData.currency === 'XAF' && (
@@ -487,6 +489,7 @@ const SignupPage = () => {
                                                         <CreditCard className="w-6 h-6 mr-4 text-blue-600" />
                                                         <div>
                                                             <h3 className="font-semibold">Mobile Money (XOF)</h3>
+                                                            <p className="text-gray-600 text-sm">Côte d'Ivoire,Mali, Senegal, benin ...etc</p>
                                                         </div>
                                                     </div>
                                                     {formData.paymentMethod === 'mobile_money' && formData.currency === 'XOF' && (

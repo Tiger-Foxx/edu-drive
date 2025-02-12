@@ -85,6 +85,7 @@ const PaymentThankYou = () => {
         if (response.data.success) {
           setStatus('success');
           setMessage(response.data.message || 'OK');
+          alert("Veuillez vérifier vos mails dans les 4 heures(Max) pour accepter l'invitation à la formation.");
           window.location.href = '/login';
           // Nettoyage
           localStorage.removeItem('userId');
