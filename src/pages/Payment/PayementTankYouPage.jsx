@@ -68,7 +68,7 @@ const PaymentThankYou = () => {
             throw new Error('Réponse MoneyFusion invalide');
           }
 
-          verificationData.transaction_id = statusResponse.data.data.numeroTransaction || statusResponse.data.data._id || statusResponse.data.data.personal_Info.orderId || paymentToken;
+          verificationData.transaction_id = statusResponse.data.data._id || statusResponse.data.data.numeroTransaction || statusResponse.data.data.personal_Info.orderId || paymentToken;
           verificationData.status = statusResponse.data.data.statut;
         }
 
@@ -92,7 +92,7 @@ const PaymentThankYou = () => {
           localStorage.removeItem('paymentToken');
         } else {
           console.log("--------------------------------------------------------------------------------------");
-          console.log("Erreur de paiement : ",response.data.message);
+          console.log("Erreur de paiement : ",response.data);
           console.log("--------------------------------------------------------------------------------------");
           throw new Error(response.data.message);
         }
@@ -101,6 +101,9 @@ const PaymentThankYou = () => {
           setStatus('success');
           setMessage( 'Paiement confirmé avec succès !');
         } else {
+          console.log("--------------------------------------------------------------------------------------");
+          console.log("Erreur de paiement : ",error.response.data);
+          console.log("--------------------------------------------------------------------------------------");
           setStatus('error');
           // console.log(response);
           console.log(error);
