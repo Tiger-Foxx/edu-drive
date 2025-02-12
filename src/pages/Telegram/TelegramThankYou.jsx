@@ -56,6 +56,11 @@ const TelegramThankYou = () => {
                     if (!paymentToken) {
                         throw new Error('Token MoneyFusion manquant');
                     }
+                    else{
+                        console.log("--------------------------------------------------------------------------------------");
+                        console.log("TOken de paiement : ",paymentToken);
+                        console.log("--------------------------------------------------------------------------------------");
+                    }
 
                     const statusResponse = await axios.get(
                         `https://www.pay.moneyfusion.net/paiementNotif/${paymentToken}`
