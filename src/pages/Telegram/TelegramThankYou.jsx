@@ -49,9 +49,8 @@ const TelegramThankYou = () => {
                         }
                     );
 
-
-                    verificationData.transaction_id = reference;
-                    verificationData.status = (statusResponse.data.status === 'SUCCESSFUL' || statusResponse.data.status === 'PENDING') ? 'success' : 'failed';
+                    verificationData.transaction_id = statusResponse.data.data._id || statusResponse.data.data.numeroTransaction || statusResponse.data.data.personal_Info.orderId || paymentToken;
+                    verificationData.status = statusResponse.data.data.statut;
                 } else if (provider === 'moneyfusion') {
                     if (!paymentToken) {
                         throw new Error('Token MoneyFusion manquant');
