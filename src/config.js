@@ -7,5 +7,5 @@ export const YOUR_CAMPAY_API_TOKEN='cf9da2372690b199aa0edca0917419d729802dc6';
 export const MONEY_FUSION_URL='https://www.pay.moneyfusion.net/Formatplus/42ba88d7da48a4ed/pay/';
 export const MONEY_FUSION_URL_TELEGRAM='https://www.pay.moneyfusion.net/FORMATPLUS/7c33a6d367728abd/pay/'
 export  const PRICE_TELEGRAM_SUBSCRIPTION=10000;
-export const PRICE_FORMAT_PLUS_SUBSCRIPTION=2900;
+export const PRICE_FORMAT_PLUS_SUBSCRIPTION=200;
 export const IS_DEMO=false;
