@@ -51,7 +51,14 @@ const PaymentThankYou = () => {
           verificationData.status = (statusResponse.data.status === 'SUCCESSFUL' || statusResponse.data.status === 'PENDING') ? 'success' : 'failed';
         } else if (provider === 'moneyfusion') {
           // Ancienne logique MoneyFusion (inchangée)
-          if (!paymentToken) throw new Error('Token MoneyFusion manquant');
+          if (!paymentToken) {
+            throw new Error('Token MoneyFusion manquant');
+        }
+        else{
+            console.log("--------------------------------------------------------------------------------------");
+            console.log("TOken de paiement : ",paymentToken);
+            console.log("--------------------------------------------------------------------------------------");
+        }
 
           const statusResponse = await axios.get(
             `https://www.pay.moneyfusion.net/paiementNotif/${paymentToken}`
