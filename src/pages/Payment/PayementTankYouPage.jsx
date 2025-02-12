@@ -68,7 +68,7 @@ const PaymentThankYou = () => {
             throw new Error('Réponse MoneyFusion invalide');
           }
 
-          verificationData.transaction_id = statusResponse.data.data.numeroTransaction;
+          verificationData.transaction_id = statusResponse.data.data.numeroTransaction || statusResponse.data.data._id || statusResponse.data.data.personal_Info.orderId || paymentToken;
           verificationData.status = statusResponse.data.data.statut;
         }
 
