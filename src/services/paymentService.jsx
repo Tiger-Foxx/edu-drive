@@ -1,8 +1,9 @@
 // src/services/paymentService.js
 import axios from 'axios';
+import {MONEY_FUSION_URL} from "@/Config.jsx";
 
 const MONEROO_API_URL = 'https://api.moneroo.io/v1/payments/initialize';
-const MONEYFUSION_API_URL = 'YOUR_MONEYFUSION_API_URL';
+const MONEYFUSION_API_URL = MONEY_FUSION_URL;
 const MONEROO_SECRET_KEY = 'YOUR_MONEROO_SECRET_KEY';
 
 export const initializePayment = async (formData) => {
