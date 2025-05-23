@@ -24,11 +24,13 @@ const HelpSection = () => {
                     title: "Comment fonctionne le système de parrainage ?",
                     content: (
                         <div className="space-y-4">
-                            <p>Notre système de parrainage vous permet de gagner de l&#39;argent en invitant d&#39;autres personnes à rejoindre notre plateforme. Voici comment cela fonctionne :</p>
+                            <p>Notre système de parrainage vous permet de gagner de l&#39;argent en invitant
+                                d&#39;autres personnes à rejoindre notre plateforme. Voici comment cela fonctionne :</p>
 
                             <div className="bg-blue-50 p-4 rounded-lg space-y-2">
                                 <h4 className="font-semibold text-blue-800">Gains Directs (40%)</h4>
-                                <p>Pour chaque personne qui s&#39;inscrit avec votre code de parrainage et paie son inscription :</p>
+                                <p>Pour chaque personne qui s&#39;inscrit avec votre code de parrainage et paie son
+                                    inscription :</p>
                                 <ul className="list-disc list-inside space-y-1 ml-4">
                                     <li>Vous recevez 40% du montant de leur inscription</li>
                                     <li>Le gain est automatiquement crédité dans votre porte-monnaie</li>
@@ -41,6 +43,16 @@ const HelpSection = () => {
                                 <p>Lorsque vos filleuls parrainent à leur tour :</p>
                                 <ul className="list-disc list-inside space-y-1 ml-4">
                                     <li>Vous gagnez 15% sur leurs parrainages</li>
+                                    <li>Ces gains s&#39;ajoutent automatiquement à votre solde</li>
+                                    <li>Revenus passifs sur plusieurs niveaux</li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-green-50 p-4 rounded-lg space-y-2">
+                                <h4 className="font-semibold text-green-800">Gains Indirects de vos filleuls (20%)</h4>
+                                <p>et Lorsque les filleurs de vos filleuls parrainent à leur tour :</p>
+                                <ul className="list-disc list-inside space-y-1 ml-4">
+                                    <li>Vous gagnez 20% sur leurs parrainages</li>
                                     <li>Ces gains s&#39;ajoutent automatiquement à votre solde</li>
                                     <li>Revenus passifs sur plusieurs niveaux</li>
                                 </ul>
@@ -67,11 +79,14 @@ const HelpSection = () => {
                     title: "Comment obtenir mon code de parrainage ?",
                     content: (
                         <div className="space-y-4">
-                            <p>Votre code de parrainage est automatiquement généré lors de votre inscription. Pour le trouver :</p>
+                            <p>Votre code de parrainage est automatiquement généré lors de votre inscription. Pour le
+                                trouver :</p>
 
                             <ol className="space-y-4">
                                 <li className="flex items-start">
-                                    <div className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold">1</div>
+                                    <div
+                                        className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 font-semibold">1
+                                    </div>
                                     <div className="ml-4">
                                         <p className="font-medium">Accédez à votre tableau de bord</p>
                                         <p className="text-gray-600">Connectez-vous à votre compte et accédez à la section &#34;Parrainage</p>

@@ -19,8 +19,8 @@ const ReferralProgram = () => {
         },
         {
             icon: TrendingUp,
-            title: "Gains Indirects 15%",
-            description: "Gagnez 15% sur les parrainages effectués par vos filleuls directs"
+            title: "Gains Indirects 15% et 20%",
+            description: "Gagnez 15% sur les parrainages effectués par vos filleuls directs et 20 % sur ceux effectués par leurs filleuls à eux"
         },
         {
             icon: Clock,

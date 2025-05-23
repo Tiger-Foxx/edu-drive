@@ -4,14 +4,14 @@ import { Send, Loader, CheckCircle, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { SERVER_BASE_URL } from "@/config.js";
 // import { MONEY_FUSION_URL } from '@/Config.jsx';
-import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
+// import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 import { IS_DEMO } from '@/Config.jsx';
 
 const TelegramThankYou = () => {
     const [status, setStatus] = useState('loading');
     const [message, setMessage] = useState('');
     const navigate = useNavigate();
-    let response;
+    // let response;
 
     useEffect(() => {
         const verifyPayment = async () => {

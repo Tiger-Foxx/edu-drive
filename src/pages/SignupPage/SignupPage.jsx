@@ -1,20 +1,16 @@
-import {useEffect, useRef, useState} from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Shield, Gift, CheckCircle, AlertCircle, ChevronRight, UserPlus, CreditCard } from 'lucide-react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import './SignupPage.css';
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
-import {SERVER_BASE_URL} from "@/Config.jsx";
+import { SERVER_BASE_URL } from "@/Config.jsx";
 import { ToastContainer, toast } from 'react-toastify';
 import { useParams } from 'react-router-dom';
 import { MONEY_FUSION_URL } from '@/Config.jsx';
-import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 import { PRICE_FORMAT_PLUS_SUBSCRIPTION } from '@/Config.jsx';
-import { IS_DEMO } from '@/Config.jsx';
-
-
-
-
+// import { IS_DEMO } from '@/Config.jsx';
+import { createSoPayPayment, handleSoPayError } from '@/services/sopayService.js';
 
 const SignupPage = () => {
     const [formData, setFormData] = useState({
@@ -26,36 +22,37 @@ const SignupPage = () => {
         confirmPassword: "",
         paymentMethod: null,
         currency: null,
-        userId:null
+        userId: null
     });
     const [step, setStep] = useState(1);
     const [active, setActive] = useState(true);
-    const [PayActive, setPayActive] = useState(true)
+    const [PayActive, setPayActive] = useState(true);
     const [errors, setErrors] = useState({});
-    const { referralCode } = useParams(); // Récupère le code de parrainage depuis l'URL
-    const {disabledCode,setDisabledCode}=useState(false);
-    let disabled=false;
-    // Effet pour remplir automatiquement le code de parrainage depuis l'URL
+    const { referralCode } = useParams();
+    const toastId = useRef(null);
+
     useEffect(() => {
         if (referralCode) {
-            disabled=true;
             setFormData(prev => ({
                 ...prev,
                 referralCode: referralCode
             }));
         }
     }, [referralCode]);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setActive(true)
-        // Ne permet pas la modification du code de parrainage s'il vient de l'URL
+        setActive(true);
+
         if (name === 'referralCode' && referralCode) {
             return;
         }
+
         setFormData(prev => ({
             ...prev,
             [name]: value
         }));
+
         if (errors[name]) {
             setErrors(prev => ({
                 ...prev,
@@ -71,103 +68,104 @@ const SignupPage = () => {
             currency: currency
         }));
     };
-    const PRICE=PRICE_FORMAT_PLUS_SUBSCRIPTION;
+
+    const PRICE = PRICE_FORMAT_PLUS_SUBSCRIPTION;
 
     const initiatePayment = async () => {
         console.log('Initiating payment...', formData);
         toastId.current = toast.info("Veuillez patienter...", { position: 'top-right', isLoading: true });
         setPayActive(false);
-      
+
         try {
-          // Stockage des informations utilisateur
-          localStorage.setItem('userId', formData.userId);
-          localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'campay' : 'moneyfusion');
-      
-          if (formData.currency === 'XAF') {
-            // Nouvelle logique Campay
-            const paymentData = {
-              amount: PRICE.toString(),
-              currency: "XAF",
-              description: "Paiement pour l'inscription",
-            //   external_reference: `inscription_${formData.userId}_${Date.now()}`,
-              redirect_url: `${window.location.origin}/payment/thank-you`,
-            //   failure_redirect_url: `${window.location.origin}/payment/thank-you`,
-            //   payment_options: ["MOMO","OM"]
-            };
-      
-            const response = await axios.post(
-               (IS_DEMO) ? "https://demo.campay.net/api/get_payment_link/" : "https://campay.net/api/get_payment_link/",
-              paymentData,
-              {
-                headers: {
+            // Stockage des informations utilisateur
+            localStorage.setItem('userId', formData.userId);
+            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'sopay' : 'moneyfusion');
 
-                  "Content-Type": "application/json",
-                  Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
-                },
-              }
-            );
+            if (formData.currency === 'XAF') {
+                // Nouvelle logique SoPay (remplace Campay)
+                const paymentData = {
+                    amount: PRICE,
+                    currency: "XAF",
+                    description: "Paiement pour l'inscription FormatPlus",
+                    return_url: `${window.location.origin}/payment/thank-you`,
+                    callback_url: `${SERVER_BASE_URL}/payments/sopay-callback/`,
+                    customer: {
+                        name: formData.name,
+                        email: formData.email,
+                        phone: formData.phone
+                    },
+                    payment_method: "MOBILE_MONEY"
+                };
 
-      
-            if (response.data.link) {
-              toast.update(toastId.current, {
-                render: "Redirection vers Campay...",
-                type: "success",
-                isLoading: false,
-                autoClose: 2500,
-              });
-              window.location.href = response.data.link;
+                const response = await createSoPayPayment(paymentData);
+
+                if (response.payment_url) {
+                    // Stocker l'ID de transaction SoPay
+                    localStorage.setItem('sopayTransactionId', response.transaction_id);
+
+                    toast.update(toastId.current, {
+                        render: "Redirection vers SoPay...",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2500,
+                    });
+
+                    window.location.href = response.payment_url;
+                } else {
+                    throw new Error('Pas de lien de paiement reçu de SoPay');
+                }
             } else {
-              throw new Error('Pas de lien de paiement reçu');
-            }
-          } else {
-            // Ancienne logique MoneyFusion (inchangée)
-            const paymentData = {
-              totalPrice: PRICE,
-              article: [{ inscription: 50 }],
-              personal_Info: [{
-                userId: formData.userId,
-                orderId: Date.now(),
-              }],
-              numeroSend: formData.phone,
-              nomclient: formData.name,
-              return_url: `${window.location.origin}/payment/thank-you`
-            };
-      
-            const response = await axios.post(
-              MONEY_FUSION_URL,
-              paymentData,
-              {
-                headers: {
+                // Logique MoneyFusion inchangée
+                const paymentData = {
+                    totalPrice: PRICE,
+                    article: [{ inscription: 50 }],
+                    personal_Info: [{
+                        userId: formData.userId,
+                        orderId: Date.now(),
+                    }],
+                    numeroSend: formData.phone,
+                    nomclient: formData.name,
+                    return_url: `${window.location.origin}/payment/thank-you`
+                };
 
-                  "Content-Type": "application/json",
-                },
-              }
-            );
-      
-            if (response.data.statut) {
-              localStorage.setItem('paymentToken', response.data.token);
-              toast.update(toastId.current, {
-                render: "Redirection vers MoneyFusion...",
-                type: "success",
-                isLoading: false,
-                autoClose: 2500,
-              });
-              window.location.href = response.data.url;
-            } else {
-              throw new Error(response.data['message-money-fusion']?.response_text_fr || "Erreur MoneyFusion");
+                const response = await axios.post(
+                    MONEY_FUSION_URL,
+                    paymentData,
+                    {
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                    }
+                );
+
+                if (response.data.statut) {
+                    localStorage.setItem('paymentToken', response.data.token);
+                    toast.update(toastId.current, {
+                        render: "Redirection vers MoneyFusion...",
+                        type: "success",
+                        isLoading: false,
+                        autoClose: 2500,
+                    });
+                    window.location.href = response.data.url;
+                } else {
+                    throw new Error(response.data['message-money-fusion']?.response_text_fr || "Erreur MoneyFusion");
+                }
             }
-          }
         } catch (error) {
-          toast.update(toastId.current, {
-            render: "Erreur : " + (error.response?.data?.error || error.message),
-            type: "error",
-            isLoading: false,
-            autoClose: 4000,
-          });
-          console.error("Erreur paiement:", error.response?.data || error);
+            const errorMessage = formData.currency === 'XAF' ?
+                handleSoPayError(error) :
+                (error.response?.data?.error || error.message);
+
+            toast.update(toastId.current, {
+                render: "Erreur : " + errorMessage,
+                type: "error",
+                isLoading: false,
+                autoClose: 4000,
+            });
+            console.error("Erreur paiement:", error.response?.data || error);
         }
         setPayActive(true);
-      };
+    };
 
     const validateStep1 = () => {
         const newErrors = {};
@@ -181,7 +179,7 @@ const SignupPage = () => {
             newErrors.phone = "Le numéro de téléphone est requis";
         } else if (!/^\+\d{10,}$/.test(formData.phone.replace(/\s/g, ""))) {
             newErrors.phone = "Numéro de téléphone invalide";
-        }        
+        }
         if (!formData.password) {
             newErrors.password = "Le mot de passe est requis";
         } else if (formData.password.length < 6) {
@@ -195,22 +193,15 @@ const SignupPage = () => {
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
-    const toastId=useRef(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setActive(false);
-        toastId.current= toast.info("Veuillez patienter...", { position: 'top-right' , isLoading:true});
+        toastId.current = toast.info("Veuillez patienter...", { position: 'top-right', isLoading: true });
+
         if (step === 1 && validateStep1()) {
             try {
-                console.log('Donnees a envoyer ',{
-                    nom: formData.name,
-                    username: formData.email,
-                    email: formData.email,
-                    phone_number: formData.phone,
-                    password: formData.password,
-                    sponsor_code_input: formData.referralCode || null,
-                })
-                const response = await axios.post(SERVER_BASE_URL+ "/register/", {
+                console.log('Données à envoyer ', {
                     nom: formData.name,
                     username: formData.email,
                     email: formData.email,
@@ -219,24 +210,30 @@ const SignupPage = () => {
                     sponsor_code_input: formData.referralCode || null,
                 });
 
-
+                const response = await axios.post(SERVER_BASE_URL + "/register/", {
+                    nom: formData.name,
+                    username: formData.email,
+                    email: formData.email,
+                    phone_number: formData.phone,
+                    password: formData.password,
+                    sponsor_code_input: formData.referralCode || null,
+                });
 
                 const { user, message } = response.data;
                 let is_old_user = message.includes('inscrit');
 
-                if (user.is_paid){
+                if (user.is_paid) {
                     toast.update(toastId.current, {
-                        render: "Votre compte est déjà payé , vous pouvez vous connecter",
+                        render: "Votre compte est déjà payé, vous pouvez vous connecter",
                         type: "warning",
                         isLoading: false,
-                        autoClose: 6000, // Notification disparaît après 4 secondes
+                        autoClose: 6000,
                     });
 
-                    toast.info( "Si vous avez oublié votre mot de passe, vous pouvez le réinitialiser",{
+                    toast.info("Si vous avez oublié votre mot de passe, vous pouvez le réinitialiser", {
                         isLoading: false,
-                        autoClose: 12000, // Notification disparaît après 4 secondes
+                        autoClose: 12000,
                     });
-                    // window.location.href = "/login";
                     return;
                 }
 
@@ -244,30 +241,28 @@ const SignupPage = () => {
                     render: message,
                     type: is_old_user ? "warning" : "success",
                     isLoading: false,
-                    autoClose: is_old_user ? 6000 : 4000, // Notification disparaît après 4 secondes
-
+                    autoClose: is_old_user ? 6000 : 4000,
                 });
-                setStep(2); // Passer à l'étape 2
+
+                setStep(2);
                 console.log("Utilisateur créé : ", user);
-                formData.userId=user.id;
+                setFormData(prev => ({ ...prev, userId: user.id }));
             } catch (error) {
                 if (error.response && error.response.data) {
                     const backendErrors = error.response.data;
                     toast.update(toastId.current, {
-                        render: "Erreur : " + backendErrors.non_field_errors || "Erreur inconnue",
+                        render: "Erreur : " + (backendErrors.non_field_errors || "Erreur inconnue"),
                         type: "error",
                         isLoading: false,
-                        autoClose: 4000, // Notification disparaît après 4 secondes
+                        autoClose: 4000,
                     });
-
                 } else {
-                    console.log('erreur inconnue',error);
+                    console.log('erreur inconnue', error);
                     toast.update(toastId.current, {
                         render: "Une erreur inattendue s'est produite.",
                         type: "error",
                         isLoading: false,
-                        autoClose: 4000, // Notification disparaît après 4 secondes
-
+                        autoClose: 4000,
                     });
                 }
             }
@@ -364,7 +359,6 @@ const SignupPage = () => {
                                                 <input
                                                     type="tel"
                                                     name="phone"
-
                                                     value={formData.phone}
                                                     onChange={handleChange}
                                                     className={`w-full px-4 py-3 rounded-xl border ${errors.phone ? 'border-red-500' : 'border-gray-300'} 
@@ -379,7 +373,7 @@ const SignupPage = () => {
                                                 )}
                                             </div>
 
-                                            <div >
+                                            <div>
                                                 <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
                                                     Mot de passe
                                                 </label>
@@ -396,7 +390,8 @@ const SignupPage = () => {
                                                     <p className="text-red-500 text-sm">{errors.password}</p>
                                                 )}
                                             </div>
-                                            <div >
+
+                                            <div>
                                                 <label
                                                     htmlFor="confirmPassword"
                                                     className="block text-sm font-medium text-gray-700 mb-2"
@@ -443,7 +438,7 @@ const SignupPage = () => {
                                                 type="submit"
                                                 className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4
                                                     rounded-xl transition-all duration-200 hover:shadow-lg transform hover:-translate-y-1
-                                                    flex items-center justify-center ${!active && 'opacity-50 cursor-not-allowed accent-gray-600'}`}
+                                                    flex items-center justify-center ${!active && 'opacity-50 cursor-not-allowed'}`}
                                             >
                                                 Continuer vers le paiement
                                                 <ChevronRight className="w-5 h-5 ml-2"/>
@@ -469,8 +464,8 @@ const SignupPage = () => {
                                                     <div className="flex items-center">
                                                         <CreditCard className="w-6 h-6 mr-4 text-blue-600" />
                                                         <div>
-                                                            <h3 className="font-semibold">Mobile Money (XAF)</h3>
-                                                            <p className="text-gray-600 text-sm">Cameroun</p>
+                                                            <h3 className="font-semibold">Mobile Money (XAF ou XOF)</h3>
+                                                            <p className="text-gray-600 text-sm">Cameroun et autres - Powered by SoPay</p>
                                                         </div>
                                                     </div>
                                                     {formData.paymentMethod === 'mobile_money' && formData.currency === 'XAF' && (
@@ -489,7 +484,7 @@ const SignupPage = () => {
                                                         <CreditCard className="w-6 h-6 mr-4 text-blue-600" />
                                                         <div>
                                                             <h3 className="font-semibold">Mobile Money (XOF)</h3>
-                                                            <p className="text-gray-600 text-sm">Côte d'Ivoire,Mali, Senegal, benin ...etc</p>
+                                                            <p className="text-gray-600 text-sm">Autres ( Mali, Sénégal, Bénin...etc )</p>
                                                         </div>
                                                     </div>
                                                     {formData.paymentMethod === 'mobile_money' && formData.currency === 'XOF' && (
@@ -499,7 +494,6 @@ const SignupPage = () => {
                                             </div>
 
                                             <button
-
                                                 onClick={initiatePayment}
                                                 disabled={!formData.paymentMethod || !PayActive}
                                                 className={`w-full bg-blue-600 text-white py-4 rounded-xl mt-4
@@ -516,8 +510,7 @@ const SignupPage = () => {
 
                     {/* Right Column - Benefits */}
                     <div className="lg:sticky lg:top-8">
-                        <div
-                            className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-xl p-8 text-white">
+                        <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl shadow-xl p-8 text-white">
                             <h3 className="text-2xl font-bold mb-6">
                                 Ce que vous obtenez
                             </h3>
@@ -552,9 +545,9 @@ const SignupPage = () => {
                             </div>
 
                             <div className="mt-8 p-6 bg-white/10 rounded-xl backdrop-blur-lg">
-                                <h4 className="font-semibold mb-2">Vous Patientez après inscription et vos formations seront disponibles</h4>
+                                <h4 className="font-semibold mb-2">Patientez après inscription</h4>
                                 <p className="text-blue-100">
-                                    En effet , nous vous invitons à vous connecter à votre compte après inscription , et patienter quelques temps pour que vous soyez autorisé a accéder a nos formations.
+                                    Connectez-vous à votre compte après inscription et patientez quelques temps pour être autorisé à accéder à nos formations.
                                 </p>
                             </div>
                         </div>

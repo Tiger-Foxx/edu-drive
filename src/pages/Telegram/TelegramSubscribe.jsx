@@ -1,14 +1,13 @@
-import  { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { toast } from 'react-hot-toast';
 import { Send, CreditCard } from 'lucide-react';
 import axios from 'axios';
-import {getCurrentUser} from "@/services/userService.jsx";
+import { getCurrentUser } from "@/services/userService.jsx";
 // import { MONEY_FUSION_URL } from '@/Config.jsx';
-import { YOUR_CAMPAY_API_TOKEN } from '@/Config.jsx';
 import { PRICE_TELEGRAM_SUBSCRIPTION } from '@/Config.jsx';
-import { IS_DEMO } from '@/Config.jsx';
-import { MONEY_FUSION_URL_TELEGRAM } from '../../config';
-
+// import { IS_DEMO } from '@/Config.jsx';
+import { createSoPayPayment, handleSoPayError } from '@/services/sopayService.js';
+import { SERVER_BASE_URL } from '@/Config.jsx';
 
 const TelegramSubscription = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -20,7 +19,6 @@ const TelegramSubscription = () => {
     const toastId = useRef();
     const currentUser = getCurrentUser();
 
-
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -29,68 +27,63 @@ const TelegramSubscription = () => {
         }));
     };
 
-    const PRICE=PRICE_TELEGRAM_SUBSCRIPTION;
+    const PRICE = PRICE_TELEGRAM_SUBSCRIPTION;
 
     const initiatePayment = async () => {
         if (!formData.telegramPhone) {
             toast.error("Le numéro de téléphone Telegram est requis");
             return;
         }
-    
+
         toastId.current = toast.loading("Initialisation du paiement...");
         setIsSubmitting(true);
-    
+
         try {
             // Store necessary information in localStorage
             localStorage.setItem('userId', currentUser.id);
-            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'campay' : 'moneyfusion');
+            localStorage.setItem('paymentProvider', formData.currency === 'XAF' ? 'sopay' : 'moneyfusion');
             localStorage.setItem('telegramData', JSON.stringify({
                 phone: formData.telegramPhone,
                 username: formData.telegramUsername
             }));
-    
-            if (formData.currency === 'XAF') {
-                // Nouvelle logique Campay
-                const paymentData = {
-                    amount: PRICE.toString(),
-                    currency: "XAF",
-                    description: "Souscription au canal Telegram",
-                    // external_reference: `telegram_${currentUser.id}_${Date.now()}`,
-                    redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
-                    // failure_redirect_url: `${window.location.origin}/payment/telegram-thank-you`,
-                    // payment_options: ["MOMO","OM"],
-                    metadata: {
-                        user_id: currentUser.id,
-                        payment_type: "telegram_subscription",
-                    }
-                };
-    
-                console.log("Données de paiement : ", paymentData);
-                const response = await axios.post(
-                    (IS_DEMO) ? "https://demo.campay.net/api/get_payment_link/" : "https://campay.net/api/get_payment_link/",
-                    paymentData,
-                    {
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Token ${YOUR_CAMPAY_API_TOKEN}`,
-                        },
-                    }
-                );
 
-    
-                if (response.data.link) {
+            if (formData.currency === 'XAF') {
+                // Nouvelle logique SoPay (remplace Campay)
+                const paymentData = {
+                    amount: PRICE,
+                    currency: "XAF",
+                    description: "Souscription au canal Telegram FormatPlus",
+                    return_url: `${window.location.origin}/payment/telegram-thank-you`,
+                    callback_url: `${SERVER_BASE_URL}/payments/sopay-telegram-callback/`,
+                    customer: {
+                        name: currentUser.nom || currentUser.name,
+                        email: currentUser.email,
+                        phone: currentUser.phone_number || formData.telegramPhone
+                    },
+                    payment_method: "MOBILE_MONEY"
+                };
+
+                console.log("Données de paiement SoPay : ", paymentData);
+                const response = await createSoPayPayment(paymentData);
+
+                if (response.payment_url) {
+                    // Stocker l'ID de transaction SoPay
+                    localStorage.setItem('sopayTransactionId', response.transaction_id);
+
                     toast.dismiss(toastId.current);
-                    toast.success("Redirection vers la page de paiement...");
-                    window.location.href = response.data.link;
+                    toast.success("Redirection vers SoPay...");
+                    window.location.href = response.payment_url;
                 } else {
-                    throw new Error('Pas de lien de paiement reçu');
+                    throw new Error('Pas de lien de paiement reçu de SoPay');
                 }
             } else {
-                // Logique MoneyFusion (inchangée)
+                // Logique MoneyFusion inchangée
+                const MONEY_FUSION_URL_TELEGRAM = 'https://www.pay.moneyfusion.net/Formatplus/telegram/pay/'; // À adapter selon votre config
+
                 const paymentData = {
                     totalPrice: PRICE,
                     article: [{
-                        telegram_subscription: 1000,
+                        telegram_subscription: PRICE,
                     }],
                     personal_Info: [{
                         userId: currentUser.id,
@@ -100,8 +93,8 @@ const TelegramSubscription = () => {
                     nomclient: currentUser.nom,
                     return_url: `${window.location.origin}/payment/telegram-thank-you`
                 };
-                
-                console.log("Données de paiement : ", paymentData);
+
+                console.log("Données de paiement MoneyFusion : ", paymentData);
                 const response = await axios.post(
                     MONEY_FUSION_URL_TELEGRAM,
                     paymentData,
@@ -111,19 +104,24 @@ const TelegramSubscription = () => {
                         },
                     }
                 );
-    
+
                 if (response.data.statut) {
                     localStorage.setItem('paymentToken', response.data.token);
                     toast.dismiss(toastId.current);
-                    toast.success("Redirection vers la page de paiement...");
+                    toast.success("Redirection vers MoneyFusion...");
                     window.location.href = response.data.url;
                 } else {
-                    throw new Error(response.data['message-money-fusion'].response_text_fr);
+                    throw new Error(response.data['message-money-fusion']?.response_text_fr || 'Erreur MoneyFusion');
                 }
             }
         } catch (error) {
             toast.dismiss(toastId.current);
-            toast.error(`Erreur lors de l'initialisation du paiement: ${error.message}`);
+
+            const errorMessage = formData.currency === 'XAF' ?
+                handleSoPayError(error) :
+                (error.response?.data?.['message-money-fusion']?.response_text_fr || error.message);
+
+            toast.error(`Erreur lors de l'initialisation du paiement: ${errorMessage}`);
             console.error("Payment error:", error);
         } finally {
             setIsSubmitting(false);
@@ -169,7 +167,7 @@ const TelegramSubscription = () => {
                                                 ? 'bg-blue-50 border-blue-500 text-blue-600'
                                                 : 'border-gray-200 hover:border-blue-200'}
                                             `}>
-                                                XAF
+                                                XAF (SoPay)
                                             </div>
                                         </label>
                                         <label className="flex-1 relative">
